@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPAMatch - ビリヤードチーム仲間探し</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <img src="logo.png" alt="JPAMatch Logo" class="logo-image">
+                <div class="logo-text">
+                    <h1 class="logo">JPAMatch</h1>
+                    <p class="subtitle">ビリヤードチーム仲間探し掲示板</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- 投稿タイプ選択 -->
+            <section class="post-type-section">
+                <h2>投稿タイプを選択</h2>
+                <div class="post-type-buttons">
+                    <button class="btn btn-primary post-type-btn active" data-type="team-recruit">
+                        🏆 チーム募集
+                    </button>
+                    <button class="btn btn-secondary post-type-btn" data-type="player-seeking">
+                        👤 チーム加入希望
+                    </button>
+                </div>
+            </section>
+
+            <!-- チーム募集フォーム -->
+            <section id="teamRecruitForm" class="post-form-section team-form">
+                <h2>🏆 チーム募集</h2>
+                <form id="teamRecruitFormElement" class="post-form">
+                    <div class="form-group">
+                        <label for="teamTitle">チーム名 *</label>
+                        <input type="text" id="teamTitle" name="title" required placeholder="例：ビリヤードクラブ エース">
+                    </div>
+                    <div class="form-group">
+                        <label for="teamContent">募集内容 *</label>
+                        <textarea id="teamContent" name="content" rows="5" required placeholder="チームの特徴、募集するメンバーの条件、活動内容などを詳しく書いてください..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="teamLevel">チームレベル</label>
+                            <select id="teamLevel" name="teamLevel">
+                                <option value="">選択してください</option>
+                                <option value="beginner">初心者歓迎</option>
+                                <option value="intermediate">中級者以上</option>
+                                <option value="advanced">上級者以上</option>
+                                <option value="mixed">レベル問わず</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="neededPlayers">必要な人数</label>
+                            <select id="neededPlayers" name="neededPlayers">
+                                <option value="">選択してください</option>
+                                <option value="1">1名</option>
+                                <option value="2">2名</option>
+                                <option value="3">3名</option>
+                                <option value="4">4名</option>
+                                <option value="5">5名以上</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="teamLocation">活動地域</label>
+                            <input type="text" id="teamLocation" name="teamLocation" placeholder="例：東京都新宿区">
+                        </div>
+                        <div class="form-group">
+                            <label for="teamFrequency">活動頻度</label>
+                            <select id="teamFrequency" name="teamFrequency">
+                                <option value="">選択してください</option>
+                                <option value="weekly">週1回</option>
+                                <option value="biweekly">週2回</option>
+                                <option value="monthly">月1回</option>
+                                <option value="flexible">不定期</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="teamCaptainName">代表者名 *</label>
+                            <input type="text" id="teamCaptainName" name="authorName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamCaptainEmail">代表者メールアドレス *</label>
+                            <input type="email" id="teamCaptainEmail" name="authorEmail" required>
+                        </div>
+                    </div>
+                    <input type="hidden" name="postType" value="team-recruit">
+                    <button type="submit" class="btn btn-primary">チーム募集を投稿</button>
+                </form>
+            </section>
+
+            <!-- チーム加入希望フォーム -->
+            <section id="playerSeekingForm" class="post-form-section player-form" style="display: none;">
+                <h2>👤 チーム加入希望</h2>
+                <form id="playerSeekingFormElement" class="post-form">
+                    <div class="form-group">
+                        <label for="playerTitle">タイトル *</label>
+                        <input type="text" id="playerTitle" name="title" required placeholder="例：ビリヤードチームに加入希望">
+                    </div>
+                    <div class="form-group">
+                        <label for="playerContent">自己紹介・希望内容 *</label>
+                        <textarea id="playerContent" name="content" rows="5" required placeholder="自分のビリヤード経験、希望するチームの条件、活動可能な時間などを詳しく書いてください..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="playerLevel">自分のレベル</label>
+                            <select id="playerLevel" name="playerLevel">
+                                <option value="">選択してください</option>
+                                <option value="beginner">初心者</option>
+                                <option value="intermediate">中級者</option>
+                                <option value="advanced">上級者</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="playerExperience">経験年数</label>
+                            <select id="playerExperience" name="playerExperience">
+                                <option value="">選択してください</option>
+                                <option value="less-than-1">1年未満</option>
+                                <option value="1-3">1-3年</option>
+                                <option value="3-5">3-5年</option>
+                                <option value="5-10">5-10年</option>
+                                <option value="more-than-10">10年以上</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="playerLocation">希望する地域</label>
+                            <input type="text" id="playerLocation" name="playerLocation" placeholder="例：東京都新宿区周辺">
+                        </div>
+                        <div class="form-group">
+                            <label for="playerAvailability">活動可能時間</label>
+                            <select id="playerAvailability" name="playerAvailability">
+                                <option value="">選択してください</option>
+                                <option value="weekday-evening">平日夜</option>
+                                <option value="weekend">週末</option>
+                                <option value="weekday-daytime">平日昼</option>
+                                <option value="flexible">時間問わず</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="playerName">お名前 *</label>
+                            <input type="text" id="playerName" name="authorName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="playerEmail">メールアドレス *</label>
+                            <input type="email" id="playerEmail" name="authorEmail" required>
+                        </div>
+                    </div>
+                    <input type="hidden" name="postType" value="player-seeking">
+                    <button type="submit" class="btn btn-secondary">加入希望を投稿</button>
+                </form>
+            </section>
+
+            <!-- 投稿一覧 -->
+            <section class="posts-section">
+                <h2>投稿一覧</h2>
+                <div class="posts-filter">
+                    <button class="filter-btn active" data-filter="all">すべて</button>
+                    <button class="filter-btn" data-filter="team-recruit">チーム募集</button>
+                    <button class="filter-btn" data-filter="player-seeking">チーム加入希望</button>
+                </div>
+                <div id="postsList" class="posts-list">
+                    <!-- 投稿がここに動的に表示されます -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 連絡モーダル -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>投稿者に連絡</h2>
+            <form id="contactForm" class="contact-form">
+                <input type="hidden" id="postId" name="postId">
+                <input type="hidden" id="postTitle" name="postTitle">
+                <input type="hidden" id="postType" name="postType">
+                <div class="form-group">
+                    <label for="senderName">お名前 *</label>
+                    <input type="text" id="senderName" name="senderName" required>
+                </div>
+                <div class="form-group">
+                    <label for="senderEmail">メールアドレス *</label>
+                    <input type="email" id="senderEmail" name="senderEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">メッセージ *</label>
+                    <textarea id="message" name="message" rows="4" required placeholder="投稿者へのメッセージを書いてください..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">メール送信</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 投稿詳細モーダル -->
+    <div id="postDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="postDetail" class="post-detail">
+                <!-- 投稿詳細がここに表示されます -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 JPAMatch. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
