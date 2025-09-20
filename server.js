@@ -15,7 +15,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // 静的ファイルの配信（開発環境用）
 app.use(express.static('.', {
   index: ['index.html'],
-  dotfiles: 'ignore'
+  dotfiles: 'ignore',
+  setHeaders: (res, path) => {
+    console.log('Serving static file:', path);
+  }
 }));
 
 // Supabaseクライアントの初期化
