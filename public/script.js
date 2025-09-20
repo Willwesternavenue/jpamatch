@@ -1,5 +1,5 @@
-// API設定
-const API_BASE_URL = 'http://localhost:3001';
+// API設定 - 本番環境では相対パス、開発環境では絶対パスを使用
+const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3001' : '';
 
 // DOM要素の取得
 const postTypeButtons = document.querySelectorAll('.post-type-btn');
