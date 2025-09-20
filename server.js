@@ -12,7 +12,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// 静的ファイルの配信（開発環境用）
+app.use(express.static('.', {
+  index: ['index.html'],
+  dotfiles: 'ignore'
+}));
 
 // Supabaseクライアントの初期化
 const supabaseUrl = process.env.SUPABASE_URL;
