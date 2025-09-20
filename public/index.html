@@ -21,6 +21,20 @@
 
     <main class="main">
         <div class="container">
+            <!-- 投稿一覧 -->
+            <section class="posts-section">
+                <h2>投稿一覧</h2>
+                <div class="posts-filter">
+                    <button class="filter-btn active" data-filter="all">すべて</button>
+                    <button class="filter-btn" data-filter="team-recruit">チームメイト募集中！</button>
+                    <button class="filter-btn" data-filter="player-seeking">チームを探しています</button>
+                    <button class="filter-btn" data-filter="division-create">ディビジョンを創りたい！</button>
+                </div>
+                <div id="postsList" class="posts-list">
+                    <!-- 投稿がここに動的に表示されます -->
+                </div>
+            </section>
+
             <!-- 投稿タイプ選択 -->
             <section class="post-type-section">
                 <h2>投稿タイプを選択</h2>
@@ -45,11 +59,11 @@
                 <form id="teamRecruitFormElement" class="post-form">
                     <div class="form-group">
                         <label for="teamTitle">チーム名またはニックネーム *</label>
-                        <input type="text" id="teamTitle" name="title" required placeholder="例：ビリヤードクラブ エース">
+                        <input type="text" id="teamTitle" name="title" required placeholder="チーム名またはニックネームを入力">
                     </div>
                     <div class="form-group">
                         <label for="teamContent">募集内容 *</label>
-                        <textarea id="teamContent" name="content" rows="5" required placeholder="チームの特徴、募集するメンバーの条件、活動内容などを詳しく書いてください..."></textarea>
+                        <textarea id="teamContent" name="content" rows="5" required placeholder="チームの特徴、募集するメンバーの条件、活動内容などを詳しく書いてください"></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -77,7 +91,20 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="teamLocation">活動地域</label>
-                            <input type="text" id="teamLocation" name="teamLocation" placeholder="例：東京都新宿区">
+                            <select id="teamLocation" name="teamLocation">
+                                <option value="">選択してください</option>
+                                <option value="hokkaido">北海道</option>
+                                <option value="tohoku">東北</option>
+                                <option value="kanto">関東</option>
+                                <option value="capital">首都圏</option>
+                                <option value="tokai">東海</option>
+                                <option value="hokuriku">北陸</option>
+                                <option value="kansai">関西</option>
+                                <option value="chugoku">中国</option>
+                                <option value="shikoku">四国</option>
+                                <option value="kyushu">九州</option>
+                                <option value="okinawa">沖縄</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="teamFrequency">活動頻度</label>
@@ -99,6 +126,11 @@
                             <label for="teamCaptainEmail">代表者メールアドレス *</label>
                             <input type="email" id="teamCaptainEmail" name="authorEmail" required>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="teamPin">削除用PIN（4桁の数字） *</label>
+                        <input type="password" id="teamPin" name="teamPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
+                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
                     </div>
                     <input type="hidden" name="postType" value="team-recruit">
                     <button type="submit" class="btn btn-primary">投稿する</button>
@@ -171,7 +203,20 @@
                     </div>
                     <div class="form-group">
                         <label for="playerLocation">活動可能地域 *</label>
-                        <input type="text" id="playerLocation" name="playerLocation" required placeholder="より具体的な方が探しやすくなります（例：東京都新宿区、神奈川県横浜市）">
+                        <select id="playerLocation" name="playerLocation" required>
+                            <option value="">選択してください</option>
+                            <option value="hokkaido">北海道</option>
+                            <option value="tohoku">東北</option>
+                            <option value="kanto">関東</option>
+                            <option value="capital">首都圏</option>
+                            <option value="tokai">東海</option>
+                            <option value="hokuriku">北陸</option>
+                            <option value="kansai">関西</option>
+                            <option value="chugoku">中国</option>
+                            <option value="shikoku">四国</option>
+                            <option value="kyushu">九州</option>
+                            <option value="okinawa">沖縄</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="playerExperience">ビリヤード歴 *</label>
@@ -236,6 +281,11 @@
                             <input type="text" id="playerAvailabilityOtherText" name="playerAvailabilityOtherText" placeholder="詳細を入力してください">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="playerPin">削除用PIN（4桁の数字） *</label>
+                        <input type="password" id="playerPin" name="playerPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
+                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
+                    </div>
                     <input type="hidden" name="postType" value="player-seeking">
                     <button type="submit" class="btn btn-secondary">投稿する</button>
                 </form>
@@ -268,7 +318,20 @@
                     </div>
                     <div class="form-group">
                         <label for="divisionLocation">活動地域 *</label>
-                        <input type="text" id="divisionLocation" name="divisionLocation" required placeholder="より具体的な方が探しやすくなります（例：東京都新宿区、神奈川県横浜市）">
+                        <select id="divisionLocation" name="divisionLocation" required>
+                            <option value="">選択してください</option>
+                            <option value="hokkaido">北海道</option>
+                            <option value="tohoku">東北</option>
+                            <option value="kanto">関東</option>
+                            <option value="capital">首都圏</option>
+                            <option value="tokai">東海</option>
+                            <option value="hokuriku">北陸</option>
+                            <option value="kansai">関西</option>
+                            <option value="chugoku">中国</option>
+                            <option value="shikoku">四国</option>
+                            <option value="kyushu">九州</option>
+                            <option value="okinawa">沖縄</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="divisionShop">主に活動している店舗（任意）</label>
@@ -309,23 +372,14 @@
                             <input type="text" id="divisionDayOtherText" name="divisionDayOtherText" placeholder="詳細を入力してください">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="divisionPin">削除用PIN（4桁の数字） *</label>
+                        <input type="password" id="divisionPin" name="divisionPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
+                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
+                    </div>
                     <input type="hidden" name="postType" value="division-create">
                     <button type="submit" class="btn btn-tertiary">投稿する</button>
                 </form>
-            </section>
-
-            <!-- 投稿一覧 -->
-            <section class="posts-section">
-                <h2>投稿一覧</h2>
-                <div class="posts-filter">
-                    <button class="filter-btn active" data-filter="all">すべて</button>
-                    <button class="filter-btn" data-filter="team-recruit">チーム募集</button>
-                    <button class="filter-btn" data-filter="player-seeking">チーム加入希望</button>
-                    <button class="filter-btn" data-filter="division-create">ディビジョン作成</button>
-                </div>
-                <div id="postsList" class="posts-list">
-                    <!-- 投稿がここに動的に表示されます -->
-                </div>
             </section>
         </div>
     </main>
@@ -363,6 +417,25 @@
             <div id="postDetail" class="post-detail">
                 <!-- 投稿詳細がここに表示されます -->
             </div>
+        </div>
+    </div>
+
+    <!-- PIN削除モーダル -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>投稿を削除</h2>
+            <p>この投稿を削除するには、投稿時に設定した4桁のPINを入力してください。</p>
+            <form id="deleteForm">
+                <div class="form-group">
+                    <label for="deletePin">削除用PIN（4桁の数字） *</label>
+                    <input type="password" id="deletePin" name="deletePin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelDelete">キャンセル</button>
+                    <button type="submit" class="btn btn-danger">削除する</button>
+                </div>
+            </form>
         </div>
     </div>
 

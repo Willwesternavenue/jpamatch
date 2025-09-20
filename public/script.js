@@ -191,13 +191,123 @@ function filterPosts(filter) {
     loadPosts();
 }
 
+// ダミーデータ
+const dummyPosts = [
+    // チーム募集
+    {
+        id: 1,
+        title: "ビリヤードクラブ エース",
+        content: "初心者から上級者まで幅広く募集しています。週1回の練習で、楽しくビリヤードを楽しみましょう！",
+        author_name: "田中太郎",
+        author_email: "tanaka@example.com",
+        post_type: "team-recruit",
+        created_at: "2024-09-20T10:00:00Z",
+        delete_pin: "1234",
+        team_level: "mixed",
+        needed_players: "2",
+        team_location: "kanto",
+        team_frequency: "weekly"
+    },
+    {
+        id: 2,
+        title: "関西ビリヤード愛好会",
+        content: "関西地区で活動しているビリヤード愛好会です。中級者以上を募集しています。",
+        author_name: "佐藤花子",
+        author_email: "sato@example.com",
+        post_type: "team-recruit",
+        created_at: "2024-09-19T15:30:00Z",
+        delete_pin: "5678",
+        team_level: "intermediate",
+        needed_players: "3",
+        team_location: "kansai",
+        team_frequency: "biweekly"
+    },
+    // チーム加入希望
+    {
+        id: 3,
+        title: "チーム加入希望 - ビリヤード太郎",
+        content: "ニックネーム: ビリヤード太郎\n参加希望人数: 1人\n活動可能地域: 関東\nビリヤード歴: 2年程度の経験があります\nJPA参加歴: なし",
+        author_name: "山田次郎",
+        author_email: "yamada@example.com",
+        post_type: "player-seeking",
+        created_at: "2024-09-18T09:15:00Z",
+        delete_pin: "9999",
+        player_nickname: "ビリヤード太郎",
+        player_count: "1",
+        player_gender: "male",
+        player_age: "30s",
+        player_location: "kanto",
+        player_experience: "2年間の経験があります",
+        jpa_history: "none",
+        player_level: "4",
+        player_game_type: "both",
+        player_frequency: "1-per-week",
+        player_availability: "weekend"
+    },
+    {
+        id: 4,
+        title: "チーム加入希望 - ビリヤード花子",
+        content: "ニックネーム: ビリヤード花子\n参加希望人数: 2人\n活動可能地域: 首都圏\nビリヤード歴: 初心者ですが頑張ります\nJPA参加歴: なし",
+        author_name: "鈴木花子",
+        author_email: "suzuki@example.com",
+        post_type: "player-seeking",
+        created_at: "2024-09-17T14:20:00Z",
+        delete_pin: "1111",
+        player_nickname: "ビリヤード花子",
+        player_count: "2",
+        player_gender: "female",
+        player_age: "20s",
+        player_location: "capital",
+        player_experience: "初心者ですが頑張ります",
+        jpa_history: "none",
+        player_level: "2",
+        player_game_type: "8ball",
+        player_frequency: "biweekly",
+        player_availability: "weekend"
+    },
+    // ディビジョン作成
+    {
+        id: 5,
+        title: "ディビジョン作成希望 - 東海",
+        content: "活動地域: 東海\n募集チーム数: 3チーム\nプレー種目: どちらでも\n主な活動店舗: ビリヤードOops!\n活動曜日: 土日祝",
+        author_name: "高橋一郎",
+        author_email: "takahashi@example.com",
+        post_type: "division-create",
+        created_at: "2024-09-16T11:45:00Z",
+        delete_pin: "2222",
+        division_location: "tokai",
+        division_shop: "ビリヤードOops!",
+        division_teams: "3",
+        division_game_type: "both",
+        division_day: "weekend"
+    },
+    {
+        id: 6,
+        title: "ディビジョン作成希望 - 九州",
+        content: "活動地域: 九州\n募集チーム数: 2チーム\nプレー種目: 8ボール\n活動曜日: これから決める",
+        author_name: "伊藤美咲",
+        author_email: "ito@example.com",
+        post_type: "division-create",
+        created_at: "2024-09-15T16:10:00Z",
+        delete_pin: "3333",
+        division_location: "kyushu",
+        division_teams: "2",
+        division_game_type: "8ball",
+        division_day: "decide"
+    }
+];
+
 // 投稿一覧の読み込み
 async function loadPosts() {
     try {
         postsList.innerHTML = '<div class="loading">投稿を読み込み中...</div>';
         
-        const response = await fetch('/api/posts');
-        const posts = await response.json();
+        // 実際のAPIがある場合はこちらを使用
+        // const response = await fetch('/api/posts');
+        // const posts = await response.json();
+        
+        // 現在はダミーデータを使用
+        const posts = dummyPosts;
         
         if (posts.length === 0) {
             postsList.innerHTML = '<div class="message">まだ投稿がありません。最初の投稿を作成してみましょう！</div>';
@@ -244,8 +354,8 @@ function createPostCard(post) {
         minute: '2-digit'
     });
     
-    const postTypeText = post.post_type === 'team-recruit' ? '🏆 チーム募集' : 
-                        post.post_type === 'player-seeking' ? '👤 チーム加入希望' : '🏢 ディビジョン作成';
+    const postTypeText = post.post_type === 'team-recruit' ? '🏆 チームメイト募集中！' : 
+                        post.post_type === 'player-seeking' ? '👤 チームを探しています' : '🏢 ディビジョンを創りたい！';
     const postTypeClass = post.post_type === 'team-recruit' ? 'team-recruit' : 
                          post.post_type === 'player-seeking' ? 'player-seeking' : 'division-create';
     
@@ -269,7 +379,7 @@ function createPostCard(post) {
                 連絡する
             </button>
             ${post.author_email === getCurrentUserEmail() ? 
-                `<button class="btn btn-danger" onclick="deletePost(${post.id})">削除</button>` : 
+                `<button class="btn btn-danger" onclick="showDeleteModal(${post.id}, '${escapeHtml(post.title)}')">削除</button>` : 
                 ''
             }
         </div>
@@ -287,7 +397,7 @@ function createPostDetails(post) {
                 <div class="post-details-grid">
                     ${post.team_level ? `<div class="post-detail-item"><span class="post-detail-label">レベル:</span> ${getLevelText(post.team_level)}</div>` : ''}
                     ${post.needed_players ? `<div class="post-detail-item"><span class="post-detail-label">募集人数:</span> ${post.needed_players}名</div>` : ''}
-                    ${post.team_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${escapeHtml(post.team_location)}</div>` : ''}
+                    ${post.team_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${getLocationText(post.team_location)}</div>` : ''}
                     ${post.team_frequency ? `<div class="post-detail-item"><span class="post-detail-label">活動頻度:</span> ${getFrequencyText(post.team_frequency)}</div>` : ''}
                 </div>
             </div>
@@ -301,7 +411,7 @@ function createPostDetails(post) {
                     ${post.player_count ? `<div class="post-detail-item"><span class="post-detail-label">参加希望人数:</span> ${escapeHtml(post.player_count)}</div>` : ''}
                     ${post.player_gender ? `<div class="post-detail-item"><span class="post-detail-label">性別:</span> ${getGenderText(post.player_gender)}</div>` : ''}
                     ${post.player_age ? `<div class="post-detail-item"><span class="post-detail-label">年齢:</span> ${getAgeText(post.player_age)}</div>` : ''}
-                    ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">活動可能地域:</span> ${escapeHtml(post.player_location)}</div>` : ''}
+                    ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">活動可能地域:</span> ${getLocationText(post.player_location)}</div>` : ''}
                     ${post.player_level ? `<div class="post-detail-item"><span class="post-detail-label">スキルレベル:</span> ${getSkillLevelText(post.player_level)}</div>` : ''}
                     ${post.player_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレーしたい種目:</span> ${getGameTypeText(post.player_game_type)}</div>` : ''}
                     ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">参加可能頻度:</span> ${getFrequencyTextNew(post.player_frequency)}</div>` : ''}
@@ -315,7 +425,7 @@ function createPostDetails(post) {
             <div class="post-details">
                 <h4>ディビジョン情報</h4>
                 <div class="post-details-grid">
-                    ${post.division_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${escapeHtml(post.division_location)}</div>` : ''}
+                    ${post.division_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${getLocationText(post.division_location)}</div>` : ''}
                     ${post.division_shop ? `<div class="post-detail-item"><span class="post-detail-label">主な活動店舗:</span> ${escapeHtml(post.division_shop)}</div>` : ''}
                     ${post.division_teams ? `<div class="post-detail-item"><span class="post-detail-label">募集チーム数:</span> ${escapeHtml(post.division_teams)}</div>` : ''}
                     ${post.division_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレー種目:</span> ${getGameTypeText(post.division_game_type)}</div>` : ''}
@@ -431,6 +541,24 @@ function getFrequencyTextNew(frequency) {
     return frequencyMap[frequency] || frequency;
 }
 
+// 地域テキストの取得
+function getLocationText(location) {
+    const locationMap = {
+        'hokkaido': '北海道',
+        'tohoku': '東北',
+        'kanto': '関東',
+        'capital': '首都圏',
+        'tokai': '東海',
+        'hokuriku': '北陸',
+        'kansai': '関西',
+        'chugoku': '中国',
+        'shikoku': '四国',
+        'kyushu': '九州',
+        'okinawa': '沖縄'
+    };
+    return locationMap[location] || location;
+}
+
 // 投稿詳細の表示
 async function showPostDetail(postId) {
     try {
@@ -493,6 +621,7 @@ async function handleTeamRecruitSubmit(event) {
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'team-recruit',
+        delete_pin: formData.get('teamPin'),
         team_level: formData.get('teamLevel'),
         needed_players: formData.get('neededPlayers'),
         team_location: formData.get('teamLocation'),
@@ -529,10 +658,11 @@ async function handlePlayerSeekingSubmit(event) {
     
     const postData = {
         title: `チーム加入希望 - ${formData.get('playerNickname')}`,
-        content: `ニックネーム: ${formData.get('playerNickname')}\n参加希望人数: ${playerCount}\n活動可能地域: ${formData.get('playerLocation')}\nビリヤード歴: ${formData.get('playerExperience')}\nJPA参加歴: ${jpaHistory === 'yes' ? 'あり' : 'なし'}${jpaHistoryText ? '\n参加期間: ' + jpaHistoryText : ''}`,
+        content: `ニックネーム: ${formData.get('playerNickname')}\n参加希望人数: ${playerCount}\n活動可能地域: ${getLocationText(formData.get('playerLocation'))}\nビリヤード歴: ${formData.get('playerExperience')}\nJPA参加歴: ${jpaHistory === 'yes' ? 'あり' : 'なし'}${jpaHistoryText ? '\n参加期間: ' + jpaHistoryText : ''}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'player-seeking',
+        delete_pin: formData.get('playerPin'),
         player_nickname: formData.get('playerNickname'),
         player_count: playerCount,
         player_gender: formData.get('playerGender'),
@@ -569,11 +699,12 @@ async function handleDivisionCreateSubmit(event) {
     }
     
     const postData = {
-        title: `ディビジョン作成希望 - ${formData.get('divisionLocation')}`,
-        content: `活動地域: ${formData.get('divisionLocation')}\n募集チーム数: ${divisionTeams}\nプレー種目: ${formData.get('divisionGameType')}${formData.get('divisionShop') ? '\n主な活動店舗: ' + formData.get('divisionShop') : ''}${divisionDay ? '\n活動曜日: ' + divisionDay : ''}`,
+        title: `ディビジョン作成希望 - ${getLocationText(formData.get('divisionLocation'))}`,
+        content: `活動地域: ${getLocationText(formData.get('divisionLocation'))}\n募集チーム数: ${divisionTeams}\nプレー種目: ${formData.get('divisionGameType')}${formData.get('divisionShop') ? '\n主な活動店舗: ' + formData.get('divisionShop') : ''}${divisionDay ? '\n活動曜日: ' + divisionDay : ''}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'division-create',
+        delete_pin: formData.get('divisionPin'),
         division_location: formData.get('divisionLocation'),
         division_shop: formData.get('divisionShop'),
         division_teams: divisionTeams,
@@ -654,32 +785,89 @@ async function handleContactSubmit(event) {
 }
 
 // 投稿の削除
-async function deletePost(postId) {
-    if (!confirm('この投稿を削除しますか？')) {
-        return;
-    }
+// PIN削除モーダルを表示
+function showDeleteModal(postId, postTitle) {
+    const deleteModal = document.getElementById('deleteModal');
+    const deletePinInput = document.getElementById('deletePin');
     
-    try {
-        const response = await fetch(`/api/posts/${postId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                author_email: getCurrentUserEmail()
-            })
-        });
-        
-        if (response.ok) {
-            showMessage('投稿が削除されました。', 'success');
-            loadPosts(); // 投稿一覧を再読み込み
-        } else {
-            const error = await response.json();
-            showMessage(`投稿の削除に失敗しました: ${error.error}`, 'error');
+    // モーダルを表示
+    deleteModal.style.display = 'block';
+    deletePinInput.value = '';
+    deletePinInput.focus();
+    
+    // 削除フォームのイベントリスナーを設定
+    const deleteForm = document.getElementById('deleteForm');
+    deleteForm.onsubmit = (e) => {
+        e.preventDefault();
+        const pin = deletePinInput.value;
+        if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+            alert('4桁の数字を入力してください。');
+            return;
         }
+        deletePost(postId, pin);
+    };
+    
+    // キャンセルボタンのイベントリスナー
+    const cancelBtn = document.getElementById('cancelDelete');
+    cancelBtn.onclick = () => {
+        deleteModal.style.display = 'none';
+    };
+    
+    // モーダルの閉じるボタン
+    const closeBtn = deleteModal.querySelector('.close');
+    closeBtn.onclick = () => {
+        deleteModal.style.display = 'none';
+    };
+    
+    // モーダル外クリックで閉じる
+    deleteModal.onclick = (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    };
+}
+
+// 投稿削除（PIN検証付き）
+async function deletePost(postId, pin) {
+    try {
+        // 実際のAPIがある場合はこちらを使用
+        // const response = await fetch(`/api/posts/${postId}`, {
+        //     method: 'DELETE',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({ pin: pin })
+        // });
+        
+        // 現在はダミーデータを使用
+        const post = dummyPosts.find(p => p.id === postId);
+        if (!post) {
+            alert('投稿が見つかりません。');
+            return;
+        }
+        
+        if (post.delete_pin !== pin) {
+            alert('PINが正しくありません。');
+            return;
+        }
+        
+        // ダミーデータから削除
+        const index = dummyPosts.findIndex(p => p.id === postId);
+        if (index > -1) {
+            dummyPosts.splice(index, 1);
+        }
+        
+        alert('投稿を削除しました。');
+        
+        // モーダルを閉じる
+        document.getElementById('deleteModal').style.display = 'none';
+        
+        // 投稿一覧を再読み込み
+        loadPosts();
+        
     } catch (error) {
         console.error('削除エラー:', error);
-        showMessage('投稿の削除に失敗しました。', 'error');
+        alert('投稿の削除に失敗しました。');
     }
 }
 
