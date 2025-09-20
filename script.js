@@ -419,7 +419,10 @@ function createPostCard(post) {
             </div>
         </div>
         <div class="post-content">
-            ${escapeHtml(post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content)}
+            ${post.content && post.content.trim() !== '' ? 
+                escapeHtml(post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content) : 
+                ''
+            }
         </div>
         ${createPostDetails(post)}
         <div class="post-actions">
@@ -758,7 +761,7 @@ async function handlePlayerSeekingSubmit(event) {
     
     const postData = {
         title: `チームを探しています`,
-        content: `ニックネーム: ${formData.get('playerNickname')}\n参加希望人数: ${playerCount}\n活動可能地域: ${getLocationText(formData.get('playerLocation'))}\nビリヤード歴: ${formData.get('playerExperience')}\nJPA参加歴: ${jpaHistory === 'yes' ? 'あり' : 'なし'}${jpaHistoryText ? '\n参加期間: ' + jpaHistoryText : ''}\n自己紹介: ${formData.get('playerSelfIntro') || '未設定'}`,
+        content: `チーム加入を希望しています。`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'player-seeking',
@@ -801,7 +804,7 @@ async function handleDivisionCreateSubmit(event) {
     
     const postData = {
         title: `ディビジョンを創りたい！`,
-        content: `活動地域: ${getLocationText(formData.get('divisionLocation'))}\n募集チーム数: ${divisionTeams}\nプレー種目: ${formData.get('divisionGameType')}${formData.get('divisionShop') ? '\n主な活動店舗: ' + formData.get('divisionShop') : ''}${divisionDay ? '\n活動曜日: ' + divisionDay : ''}`,
+        content: `新しいディビジョンの創設を希望しています。`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'division-create',
