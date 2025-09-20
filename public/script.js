@@ -1,3 +1,6 @@
+// API設定
+const API_BASE_URL = 'http://localhost:3001';
+
 // DOM要素の取得
 const postTypeButtons = document.querySelectorAll('.post-type-btn');
 const teamRecruitForm = document.getElementById('teamRecruitForm');
@@ -249,6 +252,7 @@ const dummyPosts = [
         post_type: "team-recruit",
         created_at: "2024-09-20T10:00:00Z",
         delete_pin: "1234",
+        team_nickname: "東京ビリヤードクラブ",
         team_level: "mixed",
         needed_players: "2",
         team_location: "kanto",
@@ -263,6 +267,7 @@ const dummyPosts = [
         post_type: "team-recruit",
         created_at: "2024-09-19T15:30:00Z",
         delete_pin: "5678",
+        team_nickname: "関西ビリヤード愛好会",
         team_level: "intermediate",
         needed_players: "3",
         team_location: "kansai",
@@ -271,7 +276,7 @@ const dummyPosts = [
     // チーム加入希望
     {
         id: 3,
-        title: "チーム加入希望 - ビリヤード太郎",
+        title: "チームを探しています",
         content: "ニックネーム: ビリヤード太郎\n参加希望人数: 1人\n活動可能地域: 関東\nビリヤード歴: 2年程度の経験があります\nJPA参加歴: なし",
         author_name: "山田次郎",
         author_email: "yamada@example.com",
@@ -292,7 +297,7 @@ const dummyPosts = [
     },
     {
         id: 4,
-        title: "チーム加入希望 - ビリヤード花子",
+        title: "チームを探しています",
         content: "ニックネーム: ビリヤード花子\n参加希望人数: 2人\n活動可能地域: 首都圏\nビリヤード歴: 初心者ですが頑張ります\nJPA参加歴: なし",
         author_name: "鈴木花子",
         author_email: "suzuki@example.com",
@@ -314,7 +319,7 @@ const dummyPosts = [
     // ディビジョン作成
     {
         id: 5,
-        title: "ディビジョン作成希望 - 東海",
+        title: "ディビジョンを創りたい！",
         content: "活動地域: 東海\n募集チーム数: 3チーム\nプレー種目: どちらでも\n主な活動店舗: ビリヤードOops!\n活動曜日: 土日祝",
         author_name: "高橋一郎",
         author_email: "takahashi@example.com",
@@ -329,7 +334,7 @@ const dummyPosts = [
     },
     {
         id: 6,
-        title: "ディビジョン作成希望 - 九州",
+        title: "ディビジョンを創りたい！",
         content: "活動地域: 九州\n募集チーム数: 2チーム\nプレー種目: 8ボール\n活動曜日: これから決める",
         author_name: "伊藤美咲",
         author_email: "ito@example.com",
@@ -348,12 +353,9 @@ async function loadPosts() {
     try {
         postsList.innerHTML = '<div class="loading">投稿を読み込み中...</div>';
         
-        // 実際のAPIがある場合はこちらを使用
-        // const response = await fetch('/api/posts');
-        // const posts = await response.json();
-        
-        // 現在はダミーデータを使用
-        const posts = dummyPosts;
+        // 実際のAPIを使用（キャッシュバスター付き）
+        const response = await fetch(`${API_BASE_URL}/api/posts?t=${Date.now()}`);
+        const posts = await response.json();
         
         if (posts.length === 0) {
             postsList.innerHTML = '<div class="message">まだ投稿がありません。最初の投稿を作成してみましょう！</div>';
@@ -409,9 +411,9 @@ function createPostCard(post) {
         <div class="post-type-badge ${postTypeClass}">${postTypeText}</div>
         <div class="post-header">
             <div>
-                <h3 class="post-title" onclick="showPostDetail(${post.id})">${escapeHtml(post.title)}</h3>
+                <h3 class="post-title" onclick="showPostDetail('${post.id}')">${escapeHtml(post.title)}</h3>
                 <div class="post-meta">
-                    <span>投稿者: ${escapeHtml(post.author_name || '匿名')}</span>
+                    <span>投稿者: ${escapeHtml(getDisplayName(post) || '匿名')}</span>
                     <span class="post-date">${date}</span>
                 </div>
             </div>
@@ -421,11 +423,11 @@ function createPostCard(post) {
         </div>
         ${createPostDetails(post)}
         <div class="post-actions">
-            <button class="btn btn-secondary" onclick="showContactModal(${post.id}, '${escapeHtml(post.title)}', '${post.post_type || 'general'}')">
+            <button class="btn btn-secondary" onclick="showContactModal('${post.id}', '${escapeHtml(post.title)}', '${post.post_type || 'general'}')">
                 連絡する
             </button>
             ${post.author_email === getCurrentUserEmail() ? 
-                `<button class="btn btn-danger" onclick="showDeleteModal(${post.id}, '${escapeHtml(post.title)}')">削除</button>` : 
+                `<button class="btn btn-danger" onclick="showDeleteModal('${post.id}', '${escapeHtml(post.title)}')">削除</button>` : 
                 ''
             }
         </div>
@@ -626,10 +628,20 @@ function getSkillLevelRangeText(skillLevel) {
     return skillLevelMap[skillLevel] || skillLevel;
 }
 
+// 表示用名前の取得
+function getDisplayName(post) {
+    if (post.post_type === 'team-recruit' && post.team_nickname) {
+        return post.team_nickname;
+    } else if (post.post_type === 'player-seeking' && post.player_nickname) {
+        return post.player_nickname;
+    }
+    return post.author_name || '匿名';
+}
+
 // 投稿詳細の表示
 async function showPostDetail(postId) {
     try {
-        const response = await fetch(`/api/posts/${postId}`);
+        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`);
         const post = await response.json();
         
         const postDetail = document.getElementById('postDetail');
@@ -648,7 +660,7 @@ async function showPostDetail(postId) {
             <h3>${escapeHtml(post.title)}</h3>
             <div class="meta">
                 <p><strong>投稿タイプ:</strong> ${postTypeText}</p>
-                <p><strong>投稿者:</strong> ${escapeHtml(post.author_name || '匿名')}</p>
+                <p><strong>投稿者:</strong> ${escapeHtml(getDisplayName(post) || '匿名')}</p>
                 <p><strong>投稿日時:</strong> ${date}</p>
             </div>
             <div class="content">
@@ -696,7 +708,7 @@ async function handleTeamRecruitSubmit(event) {
     }
     
     const postData = {
-        title: `${formData.get('teamNickname') || 'チーム'} - チームメイト募集中`,
+        title: `チームメイト募集中`,
         content: `チーム名・ニックネーム: ${formData.get('teamNickname') || '未設定'}\n募集人数: ${neededPlayers}\n活動地域: ${formData.get('teamLocation')}\nJPA参加歴: ${getJpaHistoryText(formData.get('teamJpaHistory'))}\n募集スキルレベル: ${getSkillLevelRangeText(formData.get('teamSkillLevel'))}\nプレー種目: ${getGameTypeText(formData.get('teamGameType'))}\n希望参加頻度: ${getFrequencyTextNew(formData.get('teamFrequency'))}\n活動曜日: ${teamAvailability || '未設定'}\n自己紹介: ${formData.get('teamSelfIntro') || '未設定'}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
@@ -742,7 +754,7 @@ async function handlePlayerSeekingSubmit(event) {
     }
     
     const postData = {
-        title: `チーム加入希望 - ${formData.get('playerNickname')}`,
+        title: `チームを探しています`,
         content: `ニックネーム: ${formData.get('playerNickname')}\n参加希望人数: ${playerCount}\n活動可能地域: ${getLocationText(formData.get('playerLocation'))}\nビリヤード歴: ${formData.get('playerExperience')}\nJPA参加歴: ${jpaHistory === 'yes' ? 'あり' : 'なし'}${jpaHistoryText ? '\n参加期間: ' + jpaHistoryText : ''}\n自己紹介: ${formData.get('playerSelfIntro') || '未設定'}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
@@ -785,7 +797,7 @@ async function handleDivisionCreateSubmit(event) {
     }
     
     const postData = {
-        title: `ディビジョン作成希望 - ${getLocationText(formData.get('divisionLocation'))}`,
+        title: `ディビジョンを創りたい！`,
         content: `活動地域: ${getLocationText(formData.get('divisionLocation'))}\n募集チーム数: ${divisionTeams}\nプレー種目: ${formData.get('divisionGameType')}${formData.get('divisionShop') ? '\n主な活動店舗: ' + formData.get('divisionShop') : ''}${divisionDay ? '\n活動曜日: ' + divisionDay : ''}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
@@ -804,7 +816,7 @@ async function handleDivisionCreateSubmit(event) {
 // 投稿の送信（共通処理）
 async function submitPost(postData, successMessage) {
     try {
-        const response = await fetch('/api/posts', {
+        const response = await fetch(`${API_BASE_URL}/api/posts`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -848,7 +860,7 @@ async function handleContactSubmit(event) {
     };
     
     try {
-        const response = await fetch('/api/contact', {
+        const response = await fetch(`${API_BASE_URL}/api/contact`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -873,83 +885,62 @@ async function handleContactSubmit(event) {
 // 投稿の削除
 // PIN削除モーダルを表示
 function showDeleteModal(postId, postTitle) {
-    const deleteModal = document.getElementById('deleteModal');
-    const deletePinInput = document.getElementById('deletePin');
-    
-    // モーダルを表示
-    deleteModal.style.display = 'block';
-    deletePinInput.value = '';
-    deletePinInput.focus();
-    
-    // 削除フォームのイベントリスナーを設定
-    const deleteForm = document.getElementById('deleteForm');
-    deleteForm.onsubmit = (e) => {
-        e.preventDefault();
-        const pin = deletePinInput.value;
-        if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-            alert('4桁の数字を入力してください。');
+    try {
+        const deleteModal = document.getElementById('deleteModal');
+        const deletePinInput = document.getElementById('deletePin');
+        
+        if (!deleteModal || !deletePinInput) {
+            console.error('削除モーダルの要素が見つかりません');
+            alert('削除モーダルの初期化に失敗しました。ページを再読み込みしてください。');
             return;
         }
-        deletePost(postId, pin);
-    };
-    
-    // キャンセルボタンのイベントリスナー
-    const cancelBtn = document.getElementById('cancelDelete');
-    cancelBtn.onclick = () => {
-        deleteModal.style.display = 'none';
-    };
-    
-    // モーダルの閉じるボタン
-    const closeBtn = deleteModal.querySelector('.close');
-    closeBtn.onclick = () => {
-        deleteModal.style.display = 'none';
-    };
-    
-    // モーダル外クリックで閉じる
-    deleteModal.onclick = (e) => {
-        if (e.target === deleteModal) {
-            deleteModal.style.display = 'none';
-        }
-    };
+        
+        // 投稿IDをモーダルに保存
+        deleteModal.dataset.postId = postId;
+        
+        // モーダルを表示
+        deleteModal.style.display = 'block';
+        deletePinInput.value = '';
+        deletePinInput.focus();
+        
+        console.log('削除モーダルを表示しました。投稿ID:', postId);
+    } catch (error) {
+        console.error('削除モーダル表示エラー:', error);
+        alert('削除モーダルの表示に失敗しました。');
+    }
 }
 
 // 投稿削除（PIN検証付き）
 async function deletePost(postId, pin) {
     try {
-        // 実際のAPIがある場合はこちらを使用
-        // const response = await fetch(`/api/posts/${postId}`, {
-        //     method: 'DELETE',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({ pin: pin })
-        // });
+        console.log('削除開始:', { postId, pin });
         
-        // 現在はダミーデータを使用
-        const post = dummyPosts.find(p => p.id === postId);
-        if (!post) {
-            alert('投稿が見つかりません。');
-            return;
+        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ pin: pin })
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || '削除に失敗しました');
         }
         
-        if (post.delete_pin !== pin) {
-            alert('PINが正しくありません。');
-            return;
-        }
-        
-        // ダミーデータから削除
-        const index = dummyPosts.findIndex(p => p.id === postId);
-        if (index > -1) {
-            dummyPosts.splice(index, 1);
-        }
-        
-        alert('投稿を削除しました。');
+        const result = await response.json();
         
         // モーダルを閉じる
         document.getElementById('deleteModal').style.display = 'none';
         
+        console.log('削除成功、投稿一覧を再読み込み中...');
+        
         // 投稿一覧を再読み込み
-        loadPosts();
+        await loadPosts();
+        
+        console.log('投稿一覧の再読み込み完了');
+        
+        alert('投稿を削除しました。');
         
     } catch (error) {
         console.error('削除エラー:', error);
@@ -1016,3 +1007,62 @@ divisionCreateFormElement.addEventListener('submit', (event) => {
         localStorage.setItem('currentUserEmail', email);
     }
 });
+
+// 削除モーダルの初期化（即座に実行）
+function initializeDeleteModal() {
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteForm = document.getElementById('deleteForm');
+    const cancelBtn = document.getElementById('cancelDelete');
+    
+    if (!deleteModal || !deleteForm || !cancelBtn) {
+        console.error('削除モーダルの要素が見つかりません');
+        return;
+    }
+    
+    // 既存のイベントリスナーを削除
+    const newDeleteForm = deleteForm.cloneNode(true);
+    deleteForm.parentNode.replaceChild(newDeleteForm, deleteForm);
+    
+    // 削除フォームのイベントリスナー
+    newDeleteForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const pin = document.getElementById('deletePin').value;
+        if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+            alert('4桁の数字を入力してください。');
+            return;
+        }
+        
+        // 投稿IDはdata属性から取得
+        const postId = deleteModal.dataset.postId;
+        if (postId) {
+            deletePost(postId, pin);
+        }
+    });
+    
+    // キャンセルボタン
+    document.getElementById('cancelDelete').addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+    });
+    
+    // モーダルの閉じるボタン
+    const closeBtn = deleteModal.querySelector('.close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            deleteModal.style.display = 'none';
+        });
+    }
+    
+    // モーダル外クリックで閉じる
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+}
+
+// ページ読み込み時に初期化
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeDeleteModal);
+} else {
+    initializeDeleteModal();
+}

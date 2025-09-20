@@ -737,3 +737,14 @@ select {
 .tab-content.active {
     display: block;
 }
+
+/* フォームノート */
+.form-note {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    border-left: 3px solid #3498db;
+    border-radius: 3px;
+}

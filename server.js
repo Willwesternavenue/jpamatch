@@ -33,11 +33,47 @@ app.get('/api/posts', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('posts')
-      .select('*')
+      .select(`
+        *,
+        team_recruit_info(*),
+        player_seeking_info(*),
+        division_create_info(*)
+      `)
       .order('created_at', { ascending: false });
     
     if (error) throw error;
-    res.json(data);
+    
+    // 関連データをフラット化
+    const flattenedData = data.map(post => {
+      const flattened = { ...post };
+      
+      // チーム募集情報をマージ
+      if (post.team_recruit_info && post.team_recruit_info.length > 0) {
+        const teamInfo = post.team_recruit_info[0];
+        Object.assign(flattened, teamInfo);
+      }
+      
+      // プレイヤー募集情報をマージ
+      if (post.player_seeking_info && post.player_seeking_info.length > 0) {
+        const playerInfo = post.player_seeking_info[0];
+        Object.assign(flattened, playerInfo);
+      }
+      
+      // ディビジョン作成情報をマージ
+      if (post.division_create_info && post.division_create_info.length > 0) {
+        const divisionInfo = post.division_create_info[0];
+        Object.assign(flattened, divisionInfo);
+      }
+      
+      // 不要なネストした配列を削除
+      delete flattened.team_recruit_info;
+      delete flattened.player_seeking_info;
+      delete flattened.division_create_info;
+      
+      return flattened;
+    });
+    
+    res.json(flattenedData);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -52,19 +88,35 @@ app.post('/api/posts', async (req, res) => {
       author_email, 
       author_name, 
       post_type,
+      delete_pin,
       // チーム募集用フィールド
-      team_level,
+      team_nickname,
       needed_players,
       team_location,
+      team_jpa_history,
+      team_skill_level,
+      team_game_type,
       team_frequency,
+      team_availability,
+      team_self_intro,
       // チーム加入希望用フィールド
-      player_level,
-      player_experience,
+      player_nickname,
+      player_count,
+      player_gender,
+      player_age,
       player_location,
-      player_availability
+      player_experience,
+      jpa_history,
+      jpa_history_text,
+      player_level,
+      player_game_type,
+      player_frequency,
+      player_availability,
+      player_self_intro
     } = req.body;
     
-    const { data, error } = await supabase
+    // まず投稿を作成
+    const { data: postData, error: postError } = await supabase
       .from('posts')
       .insert([
         {
@@ -73,24 +125,67 @@ app.post('/api/posts', async (req, res) => {
           author_email,
           author_name,
           post_type,
-          // チーム募集用フィールド
-          team_level,
-          needed_players,
-          team_location,
-          team_frequency,
-          // チーム加入希望用フィールド
-          player_level,
-          player_experience,
-          player_location,
-          player_availability,
-          created_at: new Date().toISOString()
+          delete_pin
         }
       ])
       .select();
     
-    if (error) throw error;
-    res.json(data[0]);
+    if (postError) throw postError;
+    
+    const postId = postData[0].id;
+    
+    // 投稿タイプに応じて詳細情報を挿入
+    if (post_type === 'team-recruit') {
+      const { error: teamError } = await supabase
+        .from('team_recruit_info')
+        .insert([{
+          post_id: postId,
+          team_nickname,
+          needed_players,
+          team_location,
+          team_jpa_history,
+          team_skill_level,
+          team_game_type,
+          team_frequency,
+          team_availability,
+          team_self_intro
+        }]);
+      
+      if (teamError) throw teamError;
+    }
+    
+    if (post_type === 'player-seeking') {
+      const { error: playerError } = await supabase
+        .from('player_seeking_info')
+        .insert([{
+          post_id: postId,
+          player_nickname,
+          player_count,
+          player_gender,
+          player_age,
+          player_location,
+          player_experience,
+          jpa_history,
+          jpa_history_text,
+          player_level,
+          player_game_type,
+          player_frequency,
+          player_availability,
+          player_self_intro
+        }]);
+      
+      if (playerError) throw playerError;
+    }
+    
+    res.json(postData[0]);
   } catch (error) {
+    console.error('投稿作成エラー:', error);
+    console.error('エラーの詳細:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint
+    });
     res.status(500).json({ error: error.message });
   }
 });
@@ -99,14 +194,49 @@ app.post('/api/posts', async (req, res) => {
 app.get('/api/posts/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { data, error } = await supabase
+    const { data: posts, error } = await supabase
       .from('posts')
-      .select('*')
-      .eq('id', id)
-      .single();
+      .select(`
+        *,
+        team_recruit_info(*),
+        player_seeking_info(*),
+        division_create_info(*)
+      `)
+      .eq('id', id);
     
     if (error) throw error;
-    res.json(data);
+    
+    if (!posts || posts.length === 0) {
+      return res.status(404).json({ error: '投稿が見つかりません' });
+    }
+    
+    // 関連データをフラット化
+    const flattened = { ...posts[0] };
+    
+    // チーム募集情報をマージ
+    if (posts[0].team_recruit_info && posts[0].team_recruit_info.length > 0) {
+      const teamInfo = posts[0].team_recruit_info[0];
+      Object.assign(flattened, teamInfo);
+    }
+    
+    // プレイヤー募集情報をマージ
+    if (posts[0].player_seeking_info && posts[0].player_seeking_info.length > 0) {
+      const playerInfo = posts[0].player_seeking_info[0];
+      Object.assign(flattened, playerInfo);
+    }
+    
+    // ディビジョン作成情報をマージ
+    if (posts[0].division_create_info && posts[0].division_create_info.length > 0) {
+      const divisionInfo = posts[0].division_create_info[0];
+      Object.assign(flattened, divisionInfo);
+    }
+    
+    // 不要なネストした配列を削除
+    delete flattened.team_recruit_info;
+    delete flattened.player_seeking_info;
+    delete flattened.division_create_info;
+    
+    res.json(flattened);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -163,33 +293,48 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// 投稿削除
+// 投稿削除（PIN検証付き）
 app.delete('/api/posts/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { author_email } = req.body;
+    const { pin } = req.body;
     
-    // 投稿者確認
-    const { data: post, error: postError } = await supabase
+    // 投稿とPIN確認
+    const { data: posts, error: postError } = await supabase
       .from('posts')
-      .select('author_email')
-      .eq('id', id)
-      .single();
+      .select('delete_pin')
+      .eq('id', id.toString());
     
-    if (postError) throw postError;
-    
-    if (post.author_email !== author_email) {
-      return res.status(403).json({ error: '投稿の削除権限がありません' });
+    if (postError) {
+      console.error('投稿取得エラー:', postError);
+      throw postError;
     }
     
-    const { error } = await supabase
+    if (!posts || posts.length === 0) {
+      console.log('投稿が見つかりません:', { id, posts });
+      return res.status(404).json({ error: '投稿が見つかりません' });
+    }
+    
+    const post = posts[0];
+    if (post.delete_pin !== pin) {
+      return res.status(403).json({ error: 'PINが正しくありません' });
+    }
+    
+    // CASCADE削除により、関連する詳細テーブルのデータも自動削除される
+    const { data, error } = await supabase
       .from('posts')
       .delete()
-      .eq('id', id);
+      .eq('id', id.toString());
     
-    if (error) throw error;
+    if (error) {
+      console.error('削除エラー:', error);
+      throw error;
+    }
+    
+    console.log('削除成功:', data);
     res.json({ message: '投稿が削除されました' });
   } catch (error) {
+    console.error('削除処理エラー:', error);
     res.status(500).json({ error: error.message });
   }
 });
