@@ -18,6 +18,10 @@ const closeButtons = document.querySelectorAll('.close');
 // 現在のフィルター状態
 let currentFilter = 'all';
 
+// タブ関連のDOM要素
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
 // 投稿一覧の読み込み
 document.addEventListener('DOMContentLoaded', () => {
     loadPosts();
@@ -44,6 +48,11 @@ function setupEventListeners() {
         button.addEventListener('click', () => filterPosts(button.dataset.filter));
     });
     
+    // タブボタン
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => switchTab(button.dataset.tab));
+    });
+    
     // モーダルを閉じる
     closeButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -66,8 +75,45 @@ function setupEventListeners() {
     setupDynamicFields();
 }
 
+// タブ切り替え
+function switchTab(tabName) {
+    // すべてのタブボタンからactiveクラスを削除
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    // すべてのタブコンテンツからactiveクラスを削除
+    tabContents.forEach(content => content.classList.remove('active'));
+    
+    // クリックされたタブボタンにactiveクラスを追加
+    const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+    
+    // 対応するタブコンテンツにactiveクラスを追加
+    const activeContent = document.getElementById(`${tabName}Tab`);
+    if (activeContent) {
+        activeContent.classList.add('active');
+    }
+}
+
 // 動的フィールドの設定
 function setupDynamicFields() {
+    // チームメイト募集人数の「その他」
+    const neededPlayersSelect = document.getElementById('neededPlayers');
+    const neededPlayersOther = document.getElementById('neededPlayersOther');
+    if (neededPlayersSelect && neededPlayersOther) {
+        neededPlayersSelect.addEventListener('change', function() {
+            neededPlayersOther.style.display = this.value === 'other' ? 'block' : 'none';
+        });
+    }
+    
+    // チーム活動曜日の「その他」
+    const teamAvailabilitySelect = document.getElementById('teamAvailability');
+    const teamAvailabilityOther = document.getElementById('teamAvailabilityOther');
+    if (teamAvailabilitySelect && teamAvailabilityOther) {
+        teamAvailabilitySelect.addEventListener('change', function() {
+            teamAvailabilityOther.style.display = this.value === 'other' ? 'block' : 'none';
+        });
+    }
     // 参加希望人数の「その他」選択時の処理
     const playerCountSelect = document.getElementById('playerCount');
     const playerCountOther = document.getElementById('playerCountOther');
@@ -559,6 +605,27 @@ function getLocationText(location) {
     return locationMap[location] || location;
 }
 
+function getJpaHistoryText(jpaHistory) {
+    const jpaHistoryMap = {
+        'participating': '参加中',
+        'suspended': '参加していたが現在は活動休止中',
+        'planned': 'これから参加予定'
+    };
+    return jpaHistoryMap[jpaHistory] || jpaHistory;
+}
+
+function getSkillLevelRangeText(skillLevel) {
+    const skillLevelMap = {
+        '1-3': '1〜3',
+        '3-4': '3〜4',
+        '4-5': '4〜5',
+        '5-7': '5〜7',
+        '7-9': '7〜9',
+        '9': '9'
+    };
+    return skillLevelMap[skillLevel] || skillLevel;
+}
+
 // 投稿詳細の表示
 async function showPostDetail(postId) {
     try {
@@ -615,17 +682,35 @@ async function handleTeamRecruitSubmit(event) {
     event.preventDefault();
     
     const formData = new FormData(teamRecruitFormElement);
+    
+    // チームメイト募集人数の処理
+    let neededPlayers = formData.get('neededPlayers');
+    if (neededPlayers === 'other') {
+        neededPlayers = formData.get('neededPlayersOtherText');
+    }
+    
+    // 活動曜日の処理
+    let teamAvailability = formData.get('teamAvailability');
+    if (teamAvailability === 'other') {
+        teamAvailability = formData.get('teamAvailabilityOtherText');
+    }
+    
     const postData = {
-        title: formData.get('title'),
-        content: formData.get('content'),
+        title: `${formData.get('teamNickname') || 'チーム'} - チームメイト募集中`,
+        content: `チーム名・ニックネーム: ${formData.get('teamNickname') || '未設定'}\n募集人数: ${neededPlayers}\n活動地域: ${formData.get('teamLocation')}\nJPA参加歴: ${getJpaHistoryText(formData.get('teamJpaHistory'))}\n募集スキルレベル: ${getSkillLevelRangeText(formData.get('teamSkillLevel'))}\nプレー種目: ${getGameTypeText(formData.get('teamGameType'))}\n希望参加頻度: ${getFrequencyTextNew(formData.get('teamFrequency'))}\n活動曜日: ${teamAvailability || '未設定'}\n自己紹介: ${formData.get('teamSelfIntro') || '未設定'}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'team-recruit',
         delete_pin: formData.get('teamPin'),
-        team_level: formData.get('teamLevel'),
-        needed_players: formData.get('neededPlayers'),
+        team_nickname: formData.get('teamNickname'),
+        needed_players: neededPlayers,
         team_location: formData.get('teamLocation'),
-        team_frequency: formData.get('teamFrequency')
+        team_jpa_history: formData.get('teamJpaHistory'),
+        team_skill_level: formData.get('teamSkillLevel'),
+        team_game_type: formData.get('teamGameType'),
+        team_frequency: formData.get('teamFrequency'),
+        team_availability: teamAvailability,
+        team_self_intro: formData.get('teamSelfIntro')
     };
     
     await submitPost(postData, 'チーム募集が正常に投稿されました！');
@@ -658,7 +743,7 @@ async function handlePlayerSeekingSubmit(event) {
     
     const postData = {
         title: `チーム加入希望 - ${formData.get('playerNickname')}`,
-        content: `ニックネーム: ${formData.get('playerNickname')}\n参加希望人数: ${playerCount}\n活動可能地域: ${getLocationText(formData.get('playerLocation'))}\nビリヤード歴: ${formData.get('playerExperience')}\nJPA参加歴: ${jpaHistory === 'yes' ? 'あり' : 'なし'}${jpaHistoryText ? '\n参加期間: ' + jpaHistoryText : ''}`,
+        content: `ニックネーム: ${formData.get('playerNickname')}\n参加希望人数: ${playerCount}\n活動可能地域: ${getLocationText(formData.get('playerLocation'))}\nビリヤード歴: ${formData.get('playerExperience')}\nJPA参加歴: ${jpaHistory === 'yes' ? 'あり' : 'なし'}${jpaHistoryText ? '\n参加期間: ' + jpaHistoryText : ''}\n自己紹介: ${formData.get('playerSelfIntro') || '未設定'}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'player-seeking',
@@ -674,7 +759,8 @@ async function handlePlayerSeekingSubmit(event) {
         player_level: formData.get('playerLevel'),
         player_game_type: formData.get('playerGameType'),
         player_frequency: formData.get('playerFrequency'),
-        player_availability: playerAvailability
+        player_availability: playerAvailability,
+        player_self_intro: formData.get('playerSelfIntro')
     };
     
     await submitPost(postData, 'チーム加入希望が正常に投稿されました！');

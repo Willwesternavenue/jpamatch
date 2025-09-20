@@ -21,112 +21,158 @@
 
     <main class="main">
         <div class="container">
-            <!-- 投稿一覧 -->
-            <section class="posts-section">
-                <h2>投稿一覧</h2>
-                <div class="posts-filter">
-                    <button class="filter-btn active" data-filter="all">すべて</button>
-                    <button class="filter-btn" data-filter="team-recruit">チームメイト募集中！</button>
-                    <button class="filter-btn" data-filter="player-seeking">チームを探しています</button>
-                    <button class="filter-btn" data-filter="division-create">ディビジョンを創りたい！</button>
-                </div>
-                <div id="postsList" class="posts-list">
-                    <!-- 投稿がここに動的に表示されます -->
-                </div>
-            </section>
+            <!-- タブナビゲーション -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="posts">投稿一覧</button>
+                <button class="tab-btn" data-tab="create">投稿作成</button>
+            </div>
 
-            <!-- 投稿タイプ選択 -->
-            <section class="post-type-section">
-                <h2>投稿タイプを選択</h2>
-                <div class="post-type-buttons">
-                    <button class="btn btn-primary post-type-btn active" data-type="team-recruit">
-                        🏆 チームメイト募集中！
-                    </button>
-                    <button class="btn btn-secondary post-type-btn" data-type="player-seeking">
-                        👤 チームを探しています
-                    </button>
-                    <button class="btn btn-tertiary post-type-btn" data-type="division-create">
-                        🏢 ディビジョンを創りたい！
-                    </button>
-                </div>
-                <p>⚫︎すでにチームが存在し、一緒に参加するメンバーを募集したい場合は「チームメイト募集中！」を、1人または2,3人で参加希望の方は「チームを探しています」を選択ください。
-                    <br/>「ディビジョンを創りたい！」は現在JPAを開催していない地域で、参加希望者が5〜10名以上集まっていて新しいディビジョンを創りたい、参加チームを募集したいという方向けの項目です。（JPAは5名×4チームからディビジョンを創設できます）</p>
-            </section>
+            <!-- 投稿一覧タブ -->
+            <div id="postsTab" class="tab-content active">
+                <section class="posts-section">
+                    <h2>投稿一覧</h2>
+                    <div class="posts-filter">
+                        <button class="filter-btn active" data-filter="all">すべて</button>
+                        <button class="filter-btn" data-filter="team-recruit">チームメイト募集中！</button>
+                        <button class="filter-btn" data-filter="player-seeking">チームを探しています</button>
+                        <button class="filter-btn" data-filter="division-create">ディビジョンを創りたい！</button>
+                    </div>
+                    <div id="postsList" class="posts-list">
+                        <!-- 投稿がここに動的に表示されます -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- 投稿作成タブ -->
+            <div id="createTab" class="tab-content">
+                <section class="post-type-section">
+                    <h2>投稿タイプを選択</h2>
+                    <div class="post-type-buttons">
+                        <button class="btn btn-primary post-type-btn active" data-type="team-recruit">
+                            🏆 チームメイト募集中！
+                        </button>
+                        <button class="btn btn-secondary post-type-btn" data-type="player-seeking">
+                            👤 チームを探しています
+                        </button>
+                        <button class="btn btn-tertiary post-type-btn" data-type="division-create">
+                            🏢 ディビジョンを創りたい！
+                        </button>
+                    </div>
+                    <p>⚫︎すでにチームが存在し、一緒に参加するメンバーを募集したい場合は「チームメイト募集中！」を、1人または2,3人で参加希望の方は「チームを探しています」を選択ください。
+                        <br/>「ディビジョンを創りたい！」は現在JPAを開催していない地域で、参加希望者が5〜10名以上集まっていて新しいディビジョンを創りたい、参加チームを募集したいという方向けの項目です。（JPAは5名×4チームからディビジョンを創設できます）</p>
+                </section>
 
             <!-- チーム募集フォーム -->
             <section id="teamRecruitForm" class="post-form-section team-form">
                 <h2>🏆 チームメイト募集中！</h2>
                 <form id="teamRecruitFormElement" class="post-form">
-                    <div class="form-group">
-                        <label for="teamTitle">チーム名またはニックネーム *</label>
-                        <input type="text" id="teamTitle" name="title" required placeholder="チーム名またはニックネームを入力">
+                    <div class="form-section">
+                        <h3>非公開情報（連絡用）</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="teamCaptainName">お名前 *</label>
+                                <input type="text" id="teamCaptainName" name="authorName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teamCaptainEmail">メールアドレス *</label>
+                                <input type="email" id="teamCaptainEmail" name="authorEmail" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="teamContent">募集内容 *</label>
-                        <textarea id="teamContent" name="content" rows="5" required placeholder="チームの特徴、募集するメンバーの条件、活動内容などを詳しく書いてください"></textarea>
-                    </div>
-                    <div class="form-row">
+                    
+                    <div class="form-section">
+                        <h3>公開情報</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="teamNickname">チーム名・ニックネーム</label>
+                                <input type="text" id="teamNickname" name="teamNickname" placeholder="任意">
+                            </div>
+                            <div class="form-group">
+                                <label for="neededPlayers">チームメイト募集人数 *</label>
+                                <select id="neededPlayers" name="neededPlayers" required>
+                                    <option value="">選択してください</option>
+                                    <option value="1">1人</option>
+                                    <option value="2">2人</option>
+                                    <option value="3">3人</option>
+                                    <option value="other">その他</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="neededPlayersOther" class="form-group" style="display: none;">
+                            <input type="text" id="neededPlayersOtherText" name="neededPlayersOtherText" placeholder="詳細を入力してください">
+                        </div>
+                        
                         <div class="form-group">
-                            <label for="teamLevel">チームレベル</label>
-                            <select id="teamLevel" name="teamLevel">
+                            <label for="teamLocation">活動地域 *</label>
+                            <input type="text" id="teamLocation" name="teamLocation" required placeholder="より具体的な方が探しやすくなります">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="teamJpaHistory">JPA参加歴 *</label>
+                                <select id="teamJpaHistory" name="teamJpaHistory" required>
+                                    <option value="">選択してください</option>
+                                    <option value="participating">参加中</option>
+                                    <option value="suspended">参加していたが現在は活動休止中</option>
+                                    <option value="planned">これから参加予定</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="teamSkillLevel">募集したいチームメイトのスキルレベル層 *</label>
+                                <select id="teamSkillLevel" name="teamSkillLevel" required>
+                                    <option value="">選択してください</option>
+                                    <option value="1-3">1〜3</option>
+                                    <option value="3-4">3〜4</option>
+                                    <option value="4-5">4〜5</option>
+                                    <option value="5-7">5〜7</option>
+                                    <option value="7-9">7〜9</option>
+                                    <option value="9">9</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="teamGameType">プレー種目</label>
+                                <select id="teamGameType" name="teamGameType">
+                                    <option value="">選択してください</option>
+                                    <option value="8ball">8ボール</option>
+                                    <option value="9ball">9ボール</option>
+                                    <option value="both">どちらでも</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="teamFrequency">チームメイトに望む参加頻度</label>
+                                <select id="teamFrequency" name="teamFrequency">
+                                    <option value="">選択してください</option>
+                                    <option value="weekly-plus">週1度以上</option>
+                                    <option value="weekly">週1度</option>
+                                    <option value="biweekly">2週に1度</option>
+                                    <option value="monthly">月に1,2度</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="teamAvailability">活動曜日</label>
+                            <select id="teamAvailability" name="teamAvailability">
                                 <option value="">選択してください</option>
-                                <option value="beginner">初心者歓迎</option>
-                                <option value="intermediate">中級者以上</option>
-                                <option value="advanced">上級者以上</option>
-                                <option value="mixed">レベル問わず</option>
+                                <option value="weekday">平日</option>
+                                <option value="weekend">土日祝</option>
+                                <option value="anytime">いつでも</option>
+                                <option value="other">その他</option>
                             </select>
+                            <div id="teamAvailabilityOther" class="form-group" style="display: none;">
+                                <input type="text" id="teamAvailabilityOtherText" name="teamAvailabilityOtherText" placeholder="詳細を入力してください">
+                            </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="neededPlayers">必要な人数</label>
-                            <select id="neededPlayers" name="neededPlayers">
-                                <option value="">選択してください</option>
-                                <option value="1">1名</option>
-                                <option value="2">2名</option>
-                                <option value="3">3名</option>
-                                <option value="4">4名</option>
-                                <option value="5">5名以上</option>
-                            </select>
+                            <label for="teamSelfIntro">自己紹介</label>
+                            <textarea id="teamSelfIntro" name="teamSelfIntro" rows="3" maxlength="100" placeholder="100文字以内で自己紹介を入力してください"></textarea>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="teamLocation">活動地域</label>
-                            <select id="teamLocation" name="teamLocation">
-                                <option value="">選択してください</option>
-                                <option value="hokkaido">北海道</option>
-                                <option value="tohoku">東北</option>
-                                <option value="kanto">関東</option>
-                                <option value="capital">首都圏</option>
-                                <option value="tokai">東海</option>
-                                <option value="hokuriku">北陸</option>
-                                <option value="kansai">関西</option>
-                                <option value="chugoku">中国</option>
-                                <option value="shikoku">四国</option>
-                                <option value="kyushu">九州</option>
-                                <option value="okinawa">沖縄</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="teamFrequency">活動頻度</label>
-                            <select id="teamFrequency" name="teamFrequency">
-                                <option value="">選択してください</option>
-                                <option value="weekly">週1回</option>
-                                <option value="biweekly">週2回</option>
-                                <option value="monthly">月1回</option>
-                                <option value="flexible">不定期</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="teamCaptainName">代表者名 *</label>
-                            <input type="text" id="teamCaptainName" name="authorName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="teamCaptainEmail">代表者メールアドレス *</label>
-                            <input type="email" id="teamCaptainEmail" name="authorEmail" required>
-                        </div>
-                    </div>
+                    
                     <div class="form-group">
                         <label for="teamPin">削除用PIN（4桁の数字） *</label>
                         <input type="password" id="teamPin" name="teamPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
@@ -282,6 +328,10 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="playerSelfIntro">自己紹介</label>
+                        <textarea id="playerSelfIntro" name="playerSelfIntro" rows="3" maxlength="100" placeholder="100文字以内で自己紹介を入力してください"></textarea>
+                    </div>
+                    <div class="form-group">
                         <label for="playerPin">削除用PIN（4桁の数字） *</label>
                         <input type="password" id="playerPin" name="playerPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
                         <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
@@ -381,6 +431,7 @@
                     <button type="submit" class="btn btn-tertiary">投稿する</button>
                 </form>
             </section>
+            </div>
         </div>
     </main>
 
