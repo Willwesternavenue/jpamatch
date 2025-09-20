@@ -443,10 +443,15 @@ function createPostDetails(post) {
             <div class="post-details">
                 <h4>チーム情報</h4>
                 <div class="post-details-grid">
-                    ${post.team_level ? `<div class="post-detail-item"><span class="post-detail-label">レベル:</span> ${getLevelText(post.team_level)}</div>` : ''}
+                    ${post.team_nickname ? `<div class="post-detail-item"><span class="post-detail-label">チーム名・ニックネーム:</span> ${escapeHtml(post.team_nickname)}</div>` : ''}
                     ${post.needed_players ? `<div class="post-detail-item"><span class="post-detail-label">募集人数:</span> ${post.needed_players}名</div>` : ''}
                     ${post.team_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${getLocationText(post.team_location)}</div>` : ''}
-                    ${post.team_frequency ? `<div class="post-detail-item"><span class="post-detail-label">活動頻度:</span> ${getFrequencyText(post.team_frequency)}</div>` : ''}
+                    ${post.team_jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${getJpaHistoryText(post.team_jpa_history)}</div>` : ''}
+                    ${post.team_skill_level ? `<div class="post-detail-item"><span class="post-detail-label">募集したいスキルレベル:</span> ${getSkillLevelRangeText(post.team_skill_level)}</div>` : ''}
+                    ${post.team_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレー種目:</span> ${getGameTypeText(post.team_game_type)}</div>` : ''}
+                    ${post.team_frequency ? `<div class="post-detail-item"><span class="post-detail-label">望む参加頻度:</span> ${getFrequencyTextNew(post.team_frequency)}</div>` : ''}
+                    ${post.team_availability ? `<div class="post-detail-item"><span class="post-detail-label">活動曜日:</span> ${escapeHtml(post.team_availability)}</div>` : ''}
+                    ${post.team_self_intro ? `<div class="post-detail-item"><span class="post-detail-label">自己紹介:</span> ${escapeHtml(post.team_self_intro)}</div>` : ''}
                 </div>
             </div>
         `;
@@ -465,6 +470,7 @@ function createPostDetails(post) {
                     ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">参加可能頻度:</span> ${getFrequencyTextNew(post.player_frequency)}</div>` : ''}
                     ${post.player_availability ? `<div class="post-detail-item"><span class="post-detail-label">参加可能曜日:</span> ${escapeHtml(post.player_availability)}</div>` : ''}
                     ${post.jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${post.jpa_history === 'yes' ? 'あり' : 'なし'}${post.jpa_history_text ? ' (' + escapeHtml(post.jpa_history_text) + ')' : ''}</div>` : ''}
+                    ${post.player_self_intro ? `<div class="post-detail-item"><span class="post-detail-label">自己紹介:</span> ${escapeHtml(post.player_self_intro)}</div>` : ''}
                 </div>
             </div>
         `;
@@ -663,12 +669,9 @@ async function showPostDetail(postId) {
                 <p><strong>投稿者:</strong> ${escapeHtml(getDisplayName(post) || '匿名')}</p>
                 <p><strong>投稿日時:</strong> ${date}</p>
             </div>
-            <div class="content">
-                ${escapeHtml(post.content).replace(/\n/g, '<br>')}
-            </div>
             ${createPostDetails(post)}
             <div style="margin-top: 1.5rem;">
-                <button class="btn btn-secondary" onclick="showContactModal(${post.id}, '${escapeHtml(post.title)}', '${post.post_type || 'general'}')">
+                <button class="btn btn-secondary" onclick="showContactModal('${post.id}', '${escapeHtml(post.title)}', '${post.post_type || 'general'}')">
                     連絡する
                 </button>
             </div>
