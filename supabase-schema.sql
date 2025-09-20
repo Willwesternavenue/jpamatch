@@ -48,10 +48,15 @@ CREATE TABLE posts (
 CREATE TABLE team_recruit_info (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
-    team_level VARCHAR(50),
+    team_nickname VARCHAR(100),
     needed_players VARCHAR(10),
     team_location region_enum,
-    team_frequency frequency_enum
+    team_jpa_history jpa_history_enum,
+    team_skill_level VARCHAR(50),
+    team_game_type game_type_enum,
+    team_frequency VARCHAR(50),
+    team_availability VARCHAR(100),
+    team_self_intro TEXT
 );
 
 -- チーム加入希望情報テーブル
@@ -69,7 +74,8 @@ CREATE TABLE player_seeking_info (
     player_level skill_level_enum,
     player_game_type game_type_enum,
     player_frequency VARCHAR(50),
-    player_availability VARCHAR(100)
+    player_availability VARCHAR(100),
+    player_self_intro TEXT
 );
 
 -- ディビジョン作成情報テーブル
@@ -163,21 +169,21 @@ INSERT INTO posts (title, content, author_name, author_email, post_type, delete_
 ('ディビジョン作成希望 - 九州', '活動地域: 九州\n募集チーム数: 2チーム\nプレー種目: 8ボール\n活動曜日: これから決める', '伊藤美咲', 'ito@example.com', 'division-create', '3333');
 
 -- チーム募集情報のサンプルデータ
-INSERT INTO team_recruit_info (post_id, team_level, needed_players, team_location, team_frequency)
-SELECT p.id, 'mixed', '2', 'kanto', 'weekly'
+INSERT INTO team_recruit_info (post_id, team_nickname, needed_players, team_location, team_jpa_history, team_skill_level, team_game_type, team_frequency, team_availability, team_self_intro)
+SELECT p.id, 'ビリヤードクラブ エース', '2', 'kanto', 'participating', '4-5', 'both', 'weekly', 'weekend', '初心者から上級者まで幅広く募集しています'
 FROM posts p WHERE p.title = 'ビリヤードクラブ エース';
 
-INSERT INTO team_recruit_info (post_id, team_level, needed_players, team_location, team_frequency)
-SELECT p.id, 'intermediate', '3', 'kansai', 'biweekly'
+INSERT INTO team_recruit_info (post_id, team_nickname, needed_players, team_location, team_jpa_history, team_skill_level, team_game_type, team_frequency, team_availability, team_self_intro)
+SELECT p.id, '関西ビリヤード愛好会', '3', 'kansai', 'participating', '5-7', 'both', 'biweekly', 'weekend', '関西地区で活動しているビリヤード愛好会です'
 FROM posts p WHERE p.title = '関西ビリヤード愛好会';
 
 -- チーム加入希望情報のサンプルデータ
-INSERT INTO player_seeking_info (post_id, player_nickname, player_count, player_gender, player_age, player_location, player_experience, jpa_history, player_level, player_game_type, player_frequency, player_availability)
-SELECT p.id, 'ビリヤード太郎', '1', 'male', '30s', 'kanto', '2年間の経験があります', 'none', '4', 'both', '1-per-week', 'weekend'
+INSERT INTO player_seeking_info (post_id, player_nickname, player_count, player_gender, player_age, player_location, player_experience, jpa_history, jpa_history_text, player_level, player_game_type, player_frequency, player_availability, player_self_intro)
+SELECT p.id, 'ビリヤード太郎', '1', 'male', '30s', 'kanto', '2年間の経験があります', 'none', '', '4', 'both', '1-per-week', 'weekend', '経験豊富なプレイヤーです'
 FROM posts p WHERE p.title = 'チーム加入希望 - ビリヤード太郎';
 
-INSERT INTO player_seeking_info (post_id, player_nickname, player_count, player_gender, player_age, player_location, player_experience, jpa_history, player_level, player_game_type, player_frequency, player_availability)
-SELECT p.id, 'ビリヤード花子', '2', 'female', '20s', 'capital', '初心者ですが頑張ります', 'none', '2', '8ball', 'biweekly', 'weekend'
+INSERT INTO player_seeking_info (post_id, player_nickname, player_count, player_gender, player_age, player_location, player_experience, jpa_history, jpa_history_text, player_level, player_game_type, player_frequency, player_availability, player_self_intro)
+SELECT p.id, 'ビリヤード花子', '2', 'female', '20s', 'capital', '初心者ですが頑張ります', 'none', '', '2', '8ball', 'biweekly', 'weekend', '初心者ですが一生懸命頑張ります'
 FROM posts p WHERE p.title = 'チーム加入希望 - ビリヤード花子';
 
 -- ディビジョン作成情報のサンプルデータ
