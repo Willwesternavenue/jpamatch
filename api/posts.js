@@ -14,7 +14,7 @@ if (!supabaseUrl || !supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 投稿一覧取得
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   console.log('API posts.js called:', req.method, req.url);
   console.log('Environment variables check:', {
     hasSupabaseUrl: !!process.env.SUPABASE_URL,
@@ -191,4 +191,4 @@ module.exports = async (req, res) => {
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
-};
+}

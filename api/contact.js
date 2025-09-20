@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // CORS設定
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -77,4 +77,4 @@ module.exports = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
+}
