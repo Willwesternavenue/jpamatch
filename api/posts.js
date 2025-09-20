@@ -3,10 +3,24 @@ const { createClient } = require('@supabase/supabase-js');
 // Supabaseクライアントの初期化
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables:', {
+    SUPABASE_URL: !!supabaseUrl,
+    SUPABASE_ANON_KEY: !!supabaseKey
+  });
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 投稿一覧取得
 module.exports = async (req, res) => {
+  console.log('API posts.js called:', req.method, req.url);
+  console.log('Environment variables check:', {
+    hasSupabaseUrl: !!process.env.SUPABASE_URL,
+    hasSupabaseKey: !!process.env.SUPABASE_ANON_KEY
+  });
+
   // CORS設定
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -63,6 +77,7 @@ module.exports = async (req, res) => {
       
       res.status(200).json(flattenedData);
     } catch (error) {
+      console.error('GET /api/posts error:', error);
       res.status(500).json({ error: error.message });
     }
   } else if (req.method === 'POST') {
