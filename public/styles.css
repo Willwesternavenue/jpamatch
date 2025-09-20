@@ -112,6 +112,10 @@ body {
     border-left-color: #3498db;
 }
 
+.division-form {
+    border-left-color: #27ae60;
+}
+
 .posts-section {
     border-left-color: #2c3e50;
 }
@@ -130,6 +134,10 @@ h2 {
 
 .player-form h2 {
     border-bottom-color: #3498db;
+}
+
+.division-form h2 {
+    border-bottom-color: #27ae60;
 }
 
 .posts-section h2 {
@@ -183,6 +191,27 @@ h2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+}
+
+/* フォームセクションヘッダー */
+.form-section-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #3498db;
+}
+
+.form-section-header h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.form-section-header p {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin: 0;
 }
 
 label {
@@ -266,6 +295,17 @@ select {
     background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
 }
 
+.btn-tertiary {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    color: white;
+}
+
+.btn-tertiary:hover {
+    background: linear-gradient(135deg, #229954 0%, #1e8449 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
 /* 投稿一覧 */
 .posts-list {
     display: grid;
@@ -295,6 +335,10 @@ select {
     border-left: 4px solid #3498db;
 }
 
+.post-card.division-create {
+    border-left: 4px solid #27ae60;
+}
+
 .post-type-badge {
     position: absolute;
     top: 1rem;
@@ -312,6 +356,10 @@ select {
 
 .post-type-badge.player-seeking {
     background: #3498db;
+}
+
+.post-type-badge.division-create {
+    background: #27ae60;
 }
 
 .post-header {

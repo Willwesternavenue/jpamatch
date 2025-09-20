@@ -26,20 +26,25 @@
                 <h2>投稿タイプを選択</h2>
                 <div class="post-type-buttons">
                     <button class="btn btn-primary post-type-btn active" data-type="team-recruit">
-                        🏆 チーム募集
+                        🏆 チームメイト募集中！
                     </button>
                     <button class="btn btn-secondary post-type-btn" data-type="player-seeking">
-                        👤 チーム加入希望
+                        👤 チームを探しています
+                    </button>
+                    <button class="btn btn-tertiary post-type-btn" data-type="division-create">
+                        🏢 ディビジョンを創りたい！
                     </button>
                 </div>
+                <p>⚫︎すでにチームが存在し、一緒に参加するメンバーを募集したい場合は「チームメイト募集中！」を、1人または2,3人で参加希望の方は「チームを探しています」を選択ください。
+                    <br/>「ディビジョンを創りたい！」は現在JPAを開催していない地域で、参加希望者が5〜10名以上集まっていて新しいディビジョンを創りたい、参加チームを募集したいという方向けの項目です。（JPAは5名×4チームからディビジョンを創設できます）</p>
             </section>
 
             <!-- チーム募集フォーム -->
             <section id="teamRecruitForm" class="post-form-section team-form">
-                <h2>🏆 チーム募集</h2>
+                <h2>🏆 チームメイト募集中！</h2>
                 <form id="teamRecruitFormElement" class="post-form">
                     <div class="form-group">
-                        <label for="teamTitle">チーム名 *</label>
+                        <label for="teamTitle">チーム名またはニックネーム *</label>
                         <input type="text" id="teamTitle" name="title" required placeholder="例：ビリヤードクラブ エース">
                     </div>
                     <div class="form-group">
@@ -96,72 +101,216 @@
                         </div>
                     </div>
                     <input type="hidden" name="postType" value="team-recruit">
-                    <button type="submit" class="btn btn-primary">チーム募集を投稿</button>
+                    <button type="submit" class="btn btn-primary">投稿する</button>
                 </form>
             </section>
 
             <!-- チーム加入希望フォーム -->
             <section id="playerSeekingForm" class="post-form-section player-form" style="display: none;">
-                <h2>👤 チーム加入希望</h2>
+                <h2>👤 チームを探しています</h2>
                 <form id="playerSeekingFormElement" class="post-form">
-                    <div class="form-group">
-                        <label for="playerTitle">タイトル *</label>
-                        <input type="text" id="playerTitle" name="title" required placeholder="例：ビリヤードチームに加入希望">
-                    </div>
-                    <div class="form-group">
-                        <label for="playerContent">自己紹介・希望内容 *</label>
-                        <textarea id="playerContent" name="content" rows="5" required placeholder="自分のビリヤード経験、希望するチームの条件、活動可能な時間などを詳しく書いてください..."></textarea>
+                    <!-- 非公開情報 -->
+                    <div class="form-section-header">
+                        <h3>非公開情報</h3>
+                        <p>こちらは非公開で管理されます</p>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="playerLevel">自分のレベル</label>
-                            <select id="playerLevel" name="playerLevel">
-                                <option value="">選択してください</option>
-                                <option value="beginner">初心者</option>
-                                <option value="intermediate">中級者</option>
-                                <option value="advanced">上級者</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="playerExperience">経験年数</label>
-                            <select id="playerExperience" name="playerExperience">
-                                <option value="">選択してください</option>
-                                <option value="less-than-1">1年未満</option>
-                                <option value="1-3">1-3年</option>
-                                <option value="3-5">3-5年</option>
-                                <option value="5-10">5-10年</option>
-                                <option value="more-than-10">10年以上</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="playerLocation">希望する地域</label>
-                            <input type="text" id="playerLocation" name="playerLocation" placeholder="例：東京都新宿区周辺">
-                        </div>
-                        <div class="form-group">
-                            <label for="playerAvailability">活動可能時間</label>
-                            <select id="playerAvailability" name="playerAvailability">
-                                <option value="">選択してください</option>
-                                <option value="weekday-evening">平日夜</option>
-                                <option value="weekend">週末</option>
-                                <option value="weekday-daytime">平日昼</option>
-                                <option value="flexible">時間問わず</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="playerName">お名前 *</label>
+                            <label for="playerName">お名前（非公開） *</label>
                             <input type="text" id="playerName" name="authorName" required>
                         </div>
                         <div class="form-group">
-                            <label for="playerEmail">メールアドレス *</label>
-                            <input type="email" id="playerEmail" name="authorEmail" required>
+                            <label for="playerEmail">メールアドレス（非公開） *</label>
+                            <input type="email" id="playerEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
+                        </div>
+                    </div>
+
+                    <!-- 公開情報 -->
+                    <div class="form-section-header">
+                        <h3>公開情報</h3>
+                        <p>こちらは他のユーザーに公開されます</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerNickname">ニックネーム *</label>
+                        <input type="text" id="playerNickname" name="playerNickname" required placeholder="例：ビリヤード太郎">
+                    </div>
+                    <div class="form-group">
+                        <label for="playerCount">参加希望人数 *</label>
+                        <select id="playerCount" name="playerCount" required>
+                            <option value="">選択してください</option>
+                            <option value="1">1人</option>
+                            <option value="2">2人</option>
+                            <option value="3">3人</option>
+                            <option value="other">その他（自由記述）</option>
+                        </select>
+                        <div id="playerCountOther" class="form-group" style="display: none;">
+                            <input type="text" id="playerCountOtherText" name="playerCountOtherText" placeholder="詳細を入力してください">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="playerGender">性別（任意）</label>
+                            <select id="playerGender" name="playerGender">
+                                <option value="">選択してください</option>
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="playerAge">年齢（任意）</label>
+                            <select id="playerAge" name="playerAge">
+                                <option value="">選択してください</option>
+                                <option value="10s">10代</option>
+                                <option value="20s">20代</option>
+                                <option value="30s">30代</option>
+                                <option value="40s">40代</option>
+                                <option value="50s">50代</option>
+                                <option value="60s+">60代以上</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerLocation">活動可能地域 *</label>
+                        <input type="text" id="playerLocation" name="playerLocation" required placeholder="より具体的な方が探しやすくなります（例：東京都新宿区、神奈川県横浜市）">
+                    </div>
+                    <div class="form-group">
+                        <label for="playerExperience">ビリヤード歴 *</label>
+                        <textarea id="playerExperience" name="playerExperience" rows="3" required placeholder="ビリヤードを始めた時期、練習頻度、経験などを書いてください"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="jpaHistory">過去のJPA参加歴 *</label>
+                        <select id="jpaHistory" name="jpaHistory" required>
+                            <option value="">選択してください</option>
+                            <option value="none">なし</option>
+                            <option value="yes">あり</option>
+                        </select>
+                        <div id="jpaHistoryDetail" class="form-group" style="display: none;">
+                            <label for="jpaHistoryText">参加期間</label>
+                            <textarea id="jpaHistoryText" name="jpaHistoryText" rows="2" placeholder="どれくらいの期間参加していたか詳細を書いてください"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerLevel">おおよそのスキルレベル *</label>
+                        <select id="playerLevel" name="playerLevel" required>
+                            <option value="">選択してください</option>
+                            <option value="1">1（女性ビギナー）</option>
+                            <option value="2">2（ビギナー）</option>
+                            <option value="3">3（Cクラス）</option>
+                            <option value="4">4（Cクラス上）</option>
+                            <option value="5">5（Bクラス下）</option>
+                            <option value="6">6（Bクラス）</option>
+                            <option value="7">7（Bクラス上）</option>
+                            <option value="8">8（Aクラス）</option>
+                            <option value="9">9（Aクラス上）</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerGameType">プレーしたい種目 *</label>
+                        <select id="playerGameType" name="playerGameType" required>
+                            <option value="">選択してください</option>
+                            <option value="8ball">8ボール</option>
+                            <option value="9ball">9ボール</option>
+                            <option value="both">どちらでも</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerFrequency">おおよその参加可能頻度 *</label>
+                        <select id="playerFrequency" name="playerFrequency" required>
+                            <option value="">選択してください</option>
+                            <option value="2plus-per-week">週2度以上</option>
+                            <option value="1-per-week">週1度</option>
+                            <option value="biweekly">2週に1度</option>
+                            <option value="monthly">月に1,2度</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerAvailability">参加可能曜日（任意）</label>
+                        <select id="playerAvailability" name="playerAvailability">
+                            <option value="">選択してください</option>
+                            <option value="weekday">平日</option>
+                            <option value="weekend">土日祝</option>
+                            <option value="anytime">いつでも</option>
+                            <option value="other">その他（自由記述）</option>
+                        </select>
+                        <div id="playerAvailabilityOther" class="form-group" style="display: none;">
+                            <input type="text" id="playerAvailabilityOtherText" name="playerAvailabilityOtherText" placeholder="詳細を入力してください">
                         </div>
                     </div>
                     <input type="hidden" name="postType" value="player-seeking">
-                    <button type="submit" class="btn btn-secondary">加入希望を投稿</button>
+                    <button type="submit" class="btn btn-secondary">投稿する</button>
+                </form>
+            </section>
+
+            <!-- ディビジョン作成フォーム -->
+            <section id="divisionCreateForm" class="post-form-section division-form" style="display: none;">
+                <h2>🏢 ディビジョンを創りたい！</h2>
+                <form id="divisionCreateFormElement" class="post-form">
+                    <!-- 非公開情報 -->
+                    <div class="form-section-header">
+                        <h3>非公開情報</h3>
+                        <p>こちらは非公開で管理されます</p>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="divisionName">お名前（非公開） *</label>
+                            <input type="text" id="divisionName" name="authorName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="divisionEmail">メールアドレス（非公開） *</label>
+                            <input type="email" id="divisionEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
+                        </div>
+                    </div>
+
+                    <!-- 公開情報 -->
+                    <div class="form-section-header">
+                        <h3>公開情報</h3>
+                        <p>こちらは他のユーザーに公開されます</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionLocation">活動地域 *</label>
+                        <input type="text" id="divisionLocation" name="divisionLocation" required placeholder="より具体的な方が探しやすくなります（例：東京都新宿区、神奈川県横浜市）">
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionShop">主に活動している店舗（任意）</label>
+                        <input type="text" id="divisionShop" name="divisionShop" placeholder="例：ビリヤードOops!">
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionTeams">募集チーム数 *</label>
+                        <select id="divisionTeams" name="divisionTeams" required>
+                            <option value="">選択してください</option>
+                            <option value="1">1チーム</option>
+                            <option value="2">2チーム</option>
+                            <option value="3">3チーム</option>
+                            <option value="other">その他（自由記述）</option>
+                        </select>
+                        <div id="divisionTeamsOther" class="form-group" style="display: none;">
+                            <input type="text" id="divisionTeamsOtherText" name="divisionTeamsOtherText" placeholder="詳細を入力してください">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionGameType">プレーしたい種目 *</label>
+                        <select id="divisionGameType" name="divisionGameType" required>
+                            <option value="">選択してください</option>
+                            <option value="8ball">8ボール</option>
+                            <option value="9ball">9ボール</option>
+                            <option value="both">どちらでも</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionDay">活動曜日（任意）</label>
+                        <select id="divisionDay" name="divisionDay">
+                            <option value="">選択してください</option>
+                            <option value="weekday">平日</option>
+                            <option value="weekend">土日祝</option>
+                            <option value="decide">これから決める</option>
+                            <option value="other">その他（自由記述）</option>
+                        </select>
+                        <div id="divisionDayOther" class="form-group" style="display: none;">
+                            <input type="text" id="divisionDayOtherText" name="divisionDayOtherText" placeholder="詳細を入力してください">
+                        </div>
+                    </div>
+                    <input type="hidden" name="postType" value="division-create">
+                    <button type="submit" class="btn btn-tertiary">投稿する</button>
                 </form>
             </section>
 
@@ -172,6 +321,7 @@
                     <button class="filter-btn active" data-filter="all">すべて</button>
                     <button class="filter-btn" data-filter="team-recruit">チーム募集</button>
                     <button class="filter-btn" data-filter="player-seeking">チーム加入希望</button>
+                    <button class="filter-btn" data-filter="division-create">ディビジョン作成</button>
                 </div>
                 <div id="postsList" class="posts-list">
                     <!-- 投稿がここに動的に表示されます -->

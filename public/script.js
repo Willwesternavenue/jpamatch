@@ -2,8 +2,10 @@
 const postTypeButtons = document.querySelectorAll('.post-type-btn');
 const teamRecruitForm = document.getElementById('teamRecruitForm');
 const playerSeekingForm = document.getElementById('playerSeekingForm');
+const divisionCreateForm = document.getElementById('divisionCreateForm');
 const teamRecruitFormElement = document.getElementById('teamRecruitFormElement');
 const playerSeekingFormElement = document.getElementById('playerSeekingFormElement');
+const divisionCreateFormElement = document.getElementById('divisionCreateFormElement');
 const postsList = document.getElementById('postsList');
 const contactModal = document.getElementById('contactModal');
 const postDetailModal = document.getElementById('postDetailModal');
@@ -32,6 +34,7 @@ function setupEventListeners() {
     // フォーム送信
     teamRecruitFormElement.addEventListener('submit', handleTeamRecruitSubmit);
     playerSeekingFormElement.addEventListener('submit', handlePlayerSeekingSubmit);
+    divisionCreateFormElement.addEventListener('submit', handleDivisionCreateSubmit);
     
     // 連絡フォーム
     contactForm.addEventListener('submit', handleContactSubmit);
@@ -58,6 +61,92 @@ function setupEventListeners() {
             postDetailModal.style.display = 'none';
         }
     });
+    
+    // 動的フィールドの表示/非表示
+    setupDynamicFields();
+}
+
+// 動的フィールドの設定
+function setupDynamicFields() {
+    // 参加希望人数の「その他」選択時の処理
+    const playerCountSelect = document.getElementById('playerCount');
+    const playerCountOther = document.getElementById('playerCountOther');
+    if (playerCountSelect && playerCountOther) {
+        playerCountSelect.addEventListener('change', function() {
+            if (this.value === 'other') {
+                playerCountOther.style.display = 'block';
+                document.getElementById('playerCountOtherText').required = true;
+            } else {
+                playerCountOther.style.display = 'none';
+                document.getElementById('playerCountOtherText').required = false;
+                document.getElementById('playerCountOtherText').value = '';
+            }
+        });
+    }
+    
+    // JPA参加歴の「あり」選択時の処理
+    const jpaHistorySelect = document.getElementById('jpaHistory');
+    const jpaHistoryDetail = document.getElementById('jpaHistoryDetail');
+    if (jpaHistorySelect && jpaHistoryDetail) {
+        jpaHistorySelect.addEventListener('change', function() {
+            if (this.value === 'yes') {
+                jpaHistoryDetail.style.display = 'block';
+                document.getElementById('jpaHistoryText').required = true;
+            } else {
+                jpaHistoryDetail.style.display = 'none';
+                document.getElementById('jpaHistoryText').required = false;
+                document.getElementById('jpaHistoryText').value = '';
+            }
+        });
+    }
+    
+    // 参加可能曜日の「その他」選択時の処理
+    const playerAvailabilitySelect = document.getElementById('playerAvailability');
+    const playerAvailabilityOther = document.getElementById('playerAvailabilityOther');
+    if (playerAvailabilitySelect && playerAvailabilityOther) {
+        playerAvailabilitySelect.addEventListener('change', function() {
+            if (this.value === 'other') {
+                playerAvailabilityOther.style.display = 'block';
+                document.getElementById('playerAvailabilityOtherText').required = true;
+            } else {
+                playerAvailabilityOther.style.display = 'none';
+                document.getElementById('playerAvailabilityOtherText').required = false;
+                document.getElementById('playerAvailabilityOtherText').value = '';
+            }
+        });
+    }
+    
+    // ディビジョン作成フォーム - 募集チーム数の「その他」選択時の処理
+    const divisionTeamsSelect = document.getElementById('divisionTeams');
+    const divisionTeamsOther = document.getElementById('divisionTeamsOther');
+    if (divisionTeamsSelect && divisionTeamsOther) {
+        divisionTeamsSelect.addEventListener('change', function() {
+            if (this.value === 'other') {
+                divisionTeamsOther.style.display = 'block';
+                document.getElementById('divisionTeamsOtherText').required = true;
+            } else {
+                divisionTeamsOther.style.display = 'none';
+                document.getElementById('divisionTeamsOtherText').required = false;
+                document.getElementById('divisionTeamsOtherText').value = '';
+            }
+        });
+    }
+    
+    // ディビジョン作成フォーム - 活動曜日の「その他」選択時の処理
+    const divisionDaySelect = document.getElementById('divisionDay');
+    const divisionDayOther = document.getElementById('divisionDayOther');
+    if (divisionDaySelect && divisionDayOther) {
+        divisionDaySelect.addEventListener('change', function() {
+            if (this.value === 'other') {
+                divisionDayOther.style.display = 'block';
+                document.getElementById('divisionDayOtherText').required = true;
+            } else {
+                divisionDayOther.style.display = 'none';
+                document.getElementById('divisionDayOtherText').required = false;
+                document.getElementById('divisionDayOtherText').value = '';
+            }
+        });
+    }
 }
 
 // 投稿タイプの切り替え
@@ -74,9 +163,15 @@ function switchPostType(type) {
     if (type === 'team-recruit') {
         teamRecruitForm.style.display = 'block';
         playerSeekingForm.style.display = 'none';
-    } else {
+        divisionCreateForm.style.display = 'none';
+    } else if (type === 'player-seeking') {
         teamRecruitForm.style.display = 'none';
         playerSeekingForm.style.display = 'block';
+        divisionCreateForm.style.display = 'none';
+    } else if (type === 'division-create') {
+        teamRecruitForm.style.display = 'none';
+        playerSeekingForm.style.display = 'none';
+        divisionCreateForm.style.display = 'block';
     }
 }
 
@@ -149,8 +244,10 @@ function createPostCard(post) {
         minute: '2-digit'
     });
     
-    const postTypeText = post.post_type === 'team-recruit' ? '🏆 チーム募集' : '👤 チーム加入希望';
-    const postTypeClass = post.post_type === 'team-recruit' ? 'team-recruit' : 'player-seeking';
+    const postTypeText = post.post_type === 'team-recruit' ? '🏆 チーム募集' : 
+                        post.post_type === 'player-seeking' ? '👤 チーム加入希望' : '🏢 ディビジョン作成';
+    const postTypeClass = post.post_type === 'team-recruit' ? 'team-recruit' : 
+                         post.post_type === 'player-seeking' ? 'player-seeking' : 'division-create';
     
     postCard.innerHTML = `
         <div class="post-type-badge ${postTypeClass}">${postTypeText}</div>
@@ -200,10 +297,29 @@ function createPostDetails(post) {
             <div class="post-details">
                 <h4>プレイヤー情報</h4>
                 <div class="post-details-grid">
-                    ${post.player_level ? `<div class="post-detail-item"><span class="post-detail-label">レベル:</span> ${getLevelText(post.player_level)}</div>` : ''}
-                    ${post.player_experience ? `<div class="post-detail-item"><span class="post-detail-label">経験年数:</span> ${getExperienceText(post.player_experience)}</div>` : ''}
-                    ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">希望地域:</span> ${escapeHtml(post.player_location)}</div>` : ''}
-                    ${post.player_availability ? `<div class="post-detail-item"><span class="post-detail-label">活動可能時間:</span> ${getAvailabilityText(post.player_availability)}</div>` : ''}
+                    ${post.player_nickname ? `<div class="post-detail-item"><span class="post-detail-label">ニックネーム:</span> ${escapeHtml(post.player_nickname)}</div>` : ''}
+                    ${post.player_count ? `<div class="post-detail-item"><span class="post-detail-label">参加希望人数:</span> ${escapeHtml(post.player_count)}</div>` : ''}
+                    ${post.player_gender ? `<div class="post-detail-item"><span class="post-detail-label">性別:</span> ${getGenderText(post.player_gender)}</div>` : ''}
+                    ${post.player_age ? `<div class="post-detail-item"><span class="post-detail-label">年齢:</span> ${getAgeText(post.player_age)}</div>` : ''}
+                    ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">活動可能地域:</span> ${escapeHtml(post.player_location)}</div>` : ''}
+                    ${post.player_level ? `<div class="post-detail-item"><span class="post-detail-label">スキルレベル:</span> ${getSkillLevelText(post.player_level)}</div>` : ''}
+                    ${post.player_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレーしたい種目:</span> ${getGameTypeText(post.player_game_type)}</div>` : ''}
+                    ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">参加可能頻度:</span> ${getFrequencyTextNew(post.player_frequency)}</div>` : ''}
+                    ${post.player_availability ? `<div class="post-detail-item"><span class="post-detail-label">参加可能曜日:</span> ${escapeHtml(post.player_availability)}</div>` : ''}
+                    ${post.jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${post.jpa_history === 'yes' ? 'あり' : 'なし'}${post.jpa_history_text ? ' (' + escapeHtml(post.jpa_history_text) + ')' : ''}</div>` : ''}
+                </div>
+            </div>
+        `;
+    } else if (post.post_type === 'division-create') {
+        return `
+            <div class="post-details">
+                <h4>ディビジョン情報</h4>
+                <div class="post-details-grid">
+                    ${post.division_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${escapeHtml(post.division_location)}</div>` : ''}
+                    ${post.division_shop ? `<div class="post-detail-item"><span class="post-detail-label">主な活動店舗:</span> ${escapeHtml(post.division_shop)}</div>` : ''}
+                    ${post.division_teams ? `<div class="post-detail-item"><span class="post-detail-label">募集チーム数:</span> ${escapeHtml(post.division_teams)}</div>` : ''}
+                    ${post.division_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレー種目:</span> ${getGameTypeText(post.division_game_type)}</div>` : ''}
+                    ${post.division_day ? `<div class="post-detail-item"><span class="post-detail-label">活動曜日:</span> ${escapeHtml(post.division_day)}</div>` : ''}
                 </div>
             </div>
         `;
@@ -256,6 +372,65 @@ function getAvailabilityText(availability) {
     return availabilityMap[availability] || availability;
 }
 
+// 性別テキストの取得
+function getGenderText(gender) {
+    const genderMap = {
+        'male': '男',
+        'female': '女'
+    };
+    return genderMap[gender] || gender;
+}
+
+// 年齢テキストの取得
+function getAgeText(age) {
+    const ageMap = {
+        '10s': '10代',
+        '20s': '20代',
+        '30s': '30代',
+        '40s': '40代',
+        '50s': '50代',
+        '60s+': '60代以上'
+    };
+    return ageMap[age] || age;
+}
+
+// スキルレベルテキストの取得
+function getSkillLevelText(level) {
+    const levelMap = {
+        '1': '1（女性ビギナー）',
+        '2': '2（ビギナー）',
+        '3': '3（Cクラス）',
+        '4': '4（Cクラス上）',
+        '5': '5（Bクラス下）',
+        '6': '6（Bクラス）',
+        '7': '7（Bクラス上）',
+        '8': '8（Aクラス）',
+        '9': '9（Aクラス上）'
+    };
+    return levelMap[level] || level;
+}
+
+// ゲーム種目テキストの取得
+function getGameTypeText(gameType) {
+    const gameTypeMap = {
+        '8ball': '8ボール',
+        '9ball': '9ボール',
+        'both': 'どちらでも'
+    };
+    return gameTypeMap[gameType] || gameType;
+}
+
+// 参加頻度テキストの取得（新）
+function getFrequencyTextNew(frequency) {
+    const frequencyMap = {
+        '2plus-per-week': '週2度以上',
+        '1-per-week': '週1度',
+        'biweekly': '2週に1度',
+        'monthly': '月に1,2度'
+    };
+    return frequencyMap[frequency] || frequency;
+}
+
 // 投稿詳細の表示
 async function showPostDetail(postId) {
     try {
@@ -271,7 +446,8 @@ async function showPostDetail(postId) {
             minute: '2-digit'
         });
         
-        const postTypeText = post.post_type === 'team-recruit' ? '🏆 チーム募集' : '👤 チーム加入希望';
+        const postTypeText = post.post_type === 'team-recruit' ? '🏆 チーム募集' : 
+                            post.post_type === 'player-seeking' ? '👤 チーム加入希望' : '🏢 ディビジョン作成';
         
         postDetail.innerHTML = `
             <h3>${escapeHtml(post.title)}</h3>
@@ -331,19 +507,81 @@ async function handlePlayerSeekingSubmit(event) {
     event.preventDefault();
     
     const formData = new FormData(playerSeekingFormElement);
+    
+    // 参加希望人数の処理
+    let playerCount = formData.get('playerCount');
+    if (playerCount === 'other') {
+        playerCount = formData.get('playerCountOtherText');
+    }
+    
+    // JPA参加歴の処理
+    let jpaHistory = formData.get('jpaHistory');
+    let jpaHistoryText = '';
+    if (jpaHistory === 'yes') {
+        jpaHistoryText = formData.get('jpaHistoryText');
+    }
+    
+    // 参加可能曜日の処理
+    let playerAvailability = formData.get('playerAvailability');
+    if (playerAvailability === 'other') {
+        playerAvailability = formData.get('playerAvailabilityOtherText');
+    }
+    
     const postData = {
-        title: formData.get('title'),
-        content: formData.get('content'),
+        title: `チーム加入希望 - ${formData.get('playerNickname')}`,
+        content: `ニックネーム: ${formData.get('playerNickname')}\n参加希望人数: ${playerCount}\n活動可能地域: ${formData.get('playerLocation')}\nビリヤード歴: ${formData.get('playerExperience')}\nJPA参加歴: ${jpaHistory === 'yes' ? 'あり' : 'なし'}${jpaHistoryText ? '\n参加期間: ' + jpaHistoryText : ''}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'player-seeking',
-        player_level: formData.get('playerLevel'),
-        player_experience: formData.get('playerExperience'),
+        player_nickname: formData.get('playerNickname'),
+        player_count: playerCount,
+        player_gender: formData.get('playerGender'),
+        player_age: formData.get('playerAge'),
         player_location: formData.get('playerLocation'),
-        player_availability: formData.get('playerAvailability')
+        player_experience: formData.get('playerExperience'),
+        jpa_history: jpaHistory,
+        jpa_history_text: jpaHistoryText,
+        player_level: formData.get('playerLevel'),
+        player_game_type: formData.get('playerGameType'),
+        player_frequency: formData.get('playerFrequency'),
+        player_availability: playerAvailability
     };
     
     await submitPost(postData, 'チーム加入希望が正常に投稿されました！');
+}
+
+// ディビジョン作成フォームの送信
+async function handleDivisionCreateSubmit(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(divisionCreateFormElement);
+    
+    // 募集チーム数の処理
+    let divisionTeams = formData.get('divisionTeams');
+    if (divisionTeams === 'other') {
+        divisionTeams = formData.get('divisionTeamsOtherText');
+    }
+    
+    // 活動曜日の処理
+    let divisionDay = formData.get('divisionDay');
+    if (divisionDay === 'other') {
+        divisionDay = formData.get('divisionDayOtherText');
+    }
+    
+    const postData = {
+        title: `ディビジョン作成希望 - ${formData.get('divisionLocation')}`,
+        content: `活動地域: ${formData.get('divisionLocation')}\n募集チーム数: ${divisionTeams}\nプレー種目: ${formData.get('divisionGameType')}${formData.get('divisionShop') ? '\n主な活動店舗: ' + formData.get('divisionShop') : ''}${divisionDay ? '\n活動曜日: ' + divisionDay : ''}`,
+        author_name: formData.get('authorName'),
+        author_email: formData.get('authorEmail'),
+        post_type: 'division-create',
+        division_location: formData.get('divisionLocation'),
+        division_shop: formData.get('divisionShop'),
+        division_teams: divisionTeams,
+        division_game_type: formData.get('divisionGameType'),
+        division_day: divisionDay
+    };
+    
+    await submitPost(postData, 'ディビジョン作成希望が正常に投稿されました！');
 }
 
 // 投稿の送信（共通処理）
@@ -362,8 +600,10 @@ async function submitPost(postData, successMessage) {
             // フォームをリセット
             if (postData.post_type === 'team-recruit') {
                 teamRecruitFormElement.reset();
-            } else {
+            } else if (postData.post_type === 'player-seeking') {
                 playerSeekingFormElement.reset();
+            } else if (postData.post_type === 'division-create') {
+                divisionCreateFormElement.reset();
             }
             loadPosts(); // 投稿一覧を再読み込み
         } else {
@@ -490,6 +730,13 @@ teamRecruitFormElement.addEventListener('submit', (event) => {
 });
 
 playerSeekingFormElement.addEventListener('submit', (event) => {
+    const email = event.target.querySelector('[name="authorEmail"]').value;
+    if (email) {
+        localStorage.setItem('currentUserEmail', email);
+    }
+});
+
+divisionCreateFormElement.addEventListener('submit', (event) => {
     const email = event.target.querySelector('[name="authorEmail"]').value;
     if (email) {
         localStorage.setItem('currentUserEmail', email);
