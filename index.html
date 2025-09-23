@@ -105,7 +105,25 @@
                         
                         <div class="form-group">
                             <label for="teamLocation">活動地域 *</label>
-                            <input type="text" id="teamLocation" name="teamLocation" required placeholder="より具体的な方が探しやすくなります">
+                            <select id="teamLocation" name="teamLocation" required>
+                                <option value="">選択してください</option>
+                                <option value="hokkaido">北海道</option>
+                                <option value="tohoku">東北</option>
+                                <option value="kanto">関東</option>
+                                <option value="capital">首都圏</option>
+                                <option value="tokai">東海</option>
+                                <option value="hokuriku">北陸</option>
+                                <option value="kansai">関西</option>
+                                <option value="chugoku">中国</option>
+                                <option value="shikoku">四国</option>
+                                <option value="kyushu">九州</option>
+                                <option value="okinawa">沖縄</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="teamLocationDetail">地域詳細</label>
+                            <input type="text" id="teamLocationDetail" name="teamLocationDetail" placeholder="例：東京都新宿区、大阪府大阪市など">
                         </div>
                         
                         <div class="form-row">
@@ -250,7 +268,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="playerLocation">活動可能地域 *</label>
+                        <label for="playerLocation">活動地域 *</label>
                         <select id="playerLocation" name="playerLocation" required>
                             <option value="">選択してください</option>
                             <option value="hokkaido">北海道</option>

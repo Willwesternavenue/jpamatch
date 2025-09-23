@@ -457,7 +457,7 @@ function createPostDetails(post) {
                 <div class="post-details-grid">
                     ${post.team_nickname ? `<div class="post-detail-item"><span class="post-detail-label">チーム名・ニックネーム:</span> ${escapeHtml(post.team_nickname)}</div>` : ''}
                     ${post.needed_players ? `<div class="post-detail-item"><span class="post-detail-label">募集人数:</span> ${post.needed_players}名</div>` : ''}
-                    ${post.team_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${getLocationText(post.team_location)}</div>` : ''}
+                    ${post.team_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${getLocationText(post.team_location)}${post.team_location_detail ? ` (${escapeHtml(post.team_location_detail)})` : ''}</div>` : ''}
                     ${post.team_jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${getJpaHistoryText(post.team_jpa_history)}</div>` : ''}
                     ${post.team_skill_level ? `<div class="post-detail-item"><span class="post-detail-label">募集したいスキルレベル:</span> ${getSkillLevelRangeText(post.team_skill_level)}</div>` : ''}
                     ${post.team_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレー種目:</span> ${getGameTypeText(post.team_game_type)}</div>` : ''}
@@ -728,9 +728,13 @@ async function handleTeamRecruitSubmit(event) {
         teamAvailability = formData.get('teamAvailabilityOtherText');
     }
     
+    const teamLocationDetail = formData.get('teamLocationDetail');
+    const teamLocationText = getLocationText(formData.get('teamLocation')) + 
+        (teamLocationDetail ? ` (${teamLocationDetail})` : '');
+    
     const postData = {
         title: `チームメイト募集中`,
-        content: `チーム名・ニックネーム: ${formData.get('teamNickname') || '未設定'}\n募集人数: ${neededPlayers}\n活動地域: ${formData.get('teamLocation')}\nJPA参加歴: ${getJpaHistoryText(formData.get('teamJpaHistory'))}\n募集スキルレベル: ${getSkillLevelRangeText(formData.get('teamSkillLevel'))}\nプレー種目: ${getGameTypeText(formData.get('teamGameType'))}\n希望参加頻度: ${getFrequencyTextNew(formData.get('teamFrequency'))}\n活動曜日: ${teamAvailability || '未設定'}\n自己紹介: ${formData.get('teamSelfIntro') || '未設定'}`,
+        content: `チーム名・ニックネーム: ${formData.get('teamNickname') || '未設定'}\n募集人数: ${neededPlayers}\n活動地域: ${teamLocationText}\nJPA参加歴: ${getJpaHistoryText(formData.get('teamJpaHistory'))}\n募集スキルレベル: ${getSkillLevelRangeText(formData.get('teamSkillLevel'))}\nプレー種目: ${getGameTypeText(formData.get('teamGameType'))}\n希望参加頻度: ${getFrequencyTextNew(formData.get('teamFrequency'))}\n活動曜日: ${teamAvailability || '未設定'}\n自己紹介: ${formData.get('teamSelfIntro') || '未設定'}`,
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'team-recruit',
@@ -738,6 +742,7 @@ async function handleTeamRecruitSubmit(event) {
         team_nickname: formData.get('teamNickname'),
         needed_players: neededPlayers,
         team_location: formData.get('teamLocation'),
+        team_location_detail: teamLocationDetail,
         team_jpa_history: formData.get('teamJpaHistory'),
         team_skill_level: formData.get('teamSkillLevel'),
         team_game_type: formData.get('teamGameType'),
