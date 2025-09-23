@@ -907,7 +907,8 @@ async function handleContactSubmit(event) {
         });
         
         if (response.ok) {
-            showMessage('メールが正常に送信されました！', 'success');
+            const result = await response.json();
+            showMessage('メールが正常に送信されました！確認メールも送信いたしました。', 'success');
             contactForm.reset();
             contactModal.style.display = 'none';
         } else {
