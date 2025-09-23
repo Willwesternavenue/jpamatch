@@ -56,103 +56,51 @@ export default async function handler(req, res) {
         author_name, 
         post_type,
         delete_pin,
-        // チーム募集用フィールド
-        nickname,
-        needed_players,
-        team_location,
-        team_location_detail,
-        team_jpa_history,
-        team_skill_level,
-        team_game_type,
-        team_frequency,
-        team_availability,
-        team_self_intro,
-        // チーム加入希望用フィールド
-        player_count,
-        player_gender,
-        player_age,
-        player_location,
-        player_location_detail,
-        player_experience,
-        jpa_history,
-        jpa_history_text,
-        player_level,
-        player_game_type,
-        player_frequency,
-        player_availability,
-        player_self_intro,
-        // ディビジョン作成用フィールド
-        division_location,
-        division_shop,
-        division_teams,
-        division_game_type,
-        division_day
+        // All possible fields from all forms
+        nickname, needed_players, team_location, team_location_detail, team_jpa_history, team_skill_level, team_game_type, team_frequency, team_availability, team_self_intro,
+        player_count, player_gender, player_age, player_location, player_experience, jpa_history, jpa_history_text, player_level, player_game_type, player_frequency, player_availability, player_self_intro,
+        division_location, division_shop, division_teams, division_game_type, division_day
       } = req.body;
       
       console.log('Creating post with data:', {
         title, content, author_email, author_name, post_type, delete_pin
       });
       
-      // 投稿データを作成（空の値をフィルタリング）
-      const postData = {
-        title,
-        content,
-        author_email,
-        author_name,
-        post_type,
-        delete_pin
-      };
-      
-      // 投稿タイプに応じてフィールドを追加
-      if (post_type === 'team-recruit') {
-        postData.nickname = nickname;
-        postData.needed_players = needed_players;
-        postData.team_location = team_location;
-        postData.team_location_detail = team_location_detail;
-        postData.team_jpa_history = team_jpa_history;
-        postData.team_skill_level = team_skill_level;
-        postData.team_game_type = team_game_type;
-        postData.team_frequency = team_frequency;
-        postData.team_availability = team_availability;
-        postData.team_self_intro = team_self_intro;
-      } else if (post_type === 'player-seeking') {
-        postData.nickname = nickname;
-        postData.player_count = player_count;
-        postData.player_location = player_location;
-        postData.player_location_detail = player_location_detail;
-        postData.player_experience = player_experience;
-        postData.jpa_history = jpa_history;
-        postData.jpa_history_text = jpa_history_text;
-        postData.player_availability = player_availability;
-        postData.player_self_intro = player_self_intro;
-        
-        // 空でない値のみ追加
-        if (player_gender && player_gender !== '') postData.player_gender = player_gender;
-        if (player_age && player_age !== '') postData.player_age = player_age;
-        if (player_level && player_level !== '') postData.player_level = player_level;
-        if (player_game_type && player_game_type !== '') postData.player_game_type = player_game_type;
-        if (player_frequency && player_frequency !== '') postData.player_frequency = player_frequency;
-      } else if (post_type === 'division-create') {
-        postData.division_location = division_location;
-        postData.division_shop = division_shop;
-        postData.division_teams = division_teams;
-        postData.division_game_type = division_game_type;
-        postData.division_day = division_day;
-      }
-      
-      console.log('Final post data:', postData);
-      
-      // 投稿を作成
-      const { data: createdPost, error: postError } = await supabase
+      // Filter empty strings for ENUMs and optional fields
+      const filteredPlayerGender = player_gender && player_gender !== '' ? player_gender : null;
+      const filteredPlayerAge = player_age && player_age !== '' ? player_age : null;
+      const filteredPlayerLevel = player_level && player_level !== '' ? player_level : null;
+      const filteredPlayerGameType = player_game_type && player_game_type !== '' ? player_game_type : null;
+      const filteredPlayerFrequency = player_frequency && player_frequency !== '' ? player_frequency : null;
+      const filteredTeamJpaHistory = team_jpa_history && team_jpa_history !== '' ? team_jpa_history : null;
+      const filteredTeamSkillLevel = team_skill_level && team_skill_level !== '' ? team_skill_level : null;
+      const filteredTeamGameType = team_game_type && team_game_type !== '' ? team_game_type : null;
+      const filteredTeamFrequency = team_frequency && team_frequency !== '' ? team_frequency : null;
+      const filteredDivisionGameType = division_game_type && division_game_type !== '' ? division_game_type : null;
+
+      const { data: postData, error: postError } = await supabase
         .from('posts')
-        .insert([postData])
+        .insert([
+          {
+            title, content, author_email, author_name, post_type, delete_pin,
+            nickname, needed_players, team_location, team_location_detail, team_jpa_history: filteredTeamJpaHistory, team_skill_level: filteredTeamSkillLevel, team_game_type: filteredTeamGameType, team_frequency: filteredTeamFrequency, team_availability, team_self_intro,
+            player_count, player_gender: filteredPlayerGender, player_age: filteredPlayerAge, player_location, player_experience, jpa_history, jpa_history_text, player_level: filteredPlayerLevel, player_game_type: filteredPlayerGameType, player_frequency: filteredPlayerFrequency, player_availability, player_self_intro,
+            division_location, division_shop, division_teams, division_game_type: filteredDivisionGameType, division_day
+          }
+        ])
         .select();
         
-      console.log('Post creation result:', { createdPost, postError });
+      console.log('Post creation result:', { postData, postError });
       
       if (postError) throw postError;
       
-      res.status(200).json(createdPost[0]);
+      const postId = postData[0].id;
+      
+      res.status(201).json({ 
+        success: true, 
+        message: '投稿が作成されました',
+        postId: postId 
+      });
     } catch (error) {
       console.error('投稿作成エラー:', error);
       console.error('エラーの詳細:', {

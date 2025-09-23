@@ -1,33 +1,38 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const nodemailer = require('nodemailer');
-const { createClient } = require('@supabase/supabase-js');
+const path = require('path');
 require('dotenv').config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const { createClient } = require('@supabase/supabase-js');
+const nodemailer = require('nodemailer');
 
-// ミドルウェア
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-// 静的ファイルの配信（開発環境用）
-app.use(express.static('.', {
-  index: ['index.html'],
-  dotfiles: 'ignore',
-  setHeaders: (res, path) => {
-    console.log('Serving static file:', path);
-  }
-}));
+const app = express();
+const PORT = process.env.PORT || 3001;
 
 // Supabaseクライアントの初期化
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables:', {
+    SUPABASE_URL: !!supabaseUrl,
+    SUPABASE_ANON_KEY: !!supabaseKey
+  });
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// メール送信の設定
-const transporter = nodemailer.createTransport({
+// ミドルウェア設定
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// 静的ファイルの提供
+app.use(express.static('.', { index: ['index.html'], dotfiles: 'ignore' }));
+
+// メール送信設定
+const transporter = nodemailer.createTransporter({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
@@ -40,47 +45,12 @@ app.get('/api/posts', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('posts')
-      .select(`
-        *,
-        team_recruit_info(*),
-        player_seeking_info(*),
-        division_create_info(*)
-      `)
+      .select('*')
       .order('created_at', { ascending: false });
     
     if (error) throw error;
     
-    // 関連データをフラット化
-    const flattenedData = data.map(post => {
-      const flattened = { ...post };
-      
-      // チーム募集情報をマージ
-      if (post.team_recruit_info && post.team_recruit_info.length > 0) {
-        const teamInfo = post.team_recruit_info[0];
-        Object.assign(flattened, teamInfo);
-      }
-      
-      // プレイヤー募集情報をマージ
-      if (post.player_seeking_info && post.player_seeking_info.length > 0) {
-        const playerInfo = post.player_seeking_info[0];
-        Object.assign(flattened, playerInfo);
-      }
-      
-      // ディビジョン作成情報をマージ
-      if (post.division_create_info && post.division_create_info.length > 0) {
-        const divisionInfo = post.division_create_info[0];
-        Object.assign(flattened, divisionInfo);
-      }
-      
-      // 不要なネストした配列を削除
-      delete flattened.team_recruit_info;
-      delete flattened.player_seeking_info;
-      delete flattened.division_create_info;
-      
-      return flattened;
-    });
-    
-    res.json(flattenedData);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -96,43 +66,32 @@ app.post('/api/posts', async (req, res) => {
       author_name, 
       post_type,
       delete_pin,
-      // チーム募集用フィールド
-      team_nickname,
-      needed_players,
-      team_location,
-      team_jpa_history,
-      team_skill_level,
-      team_game_type,
-      team_frequency,
-      team_availability,
-      team_self_intro,
-      // チーム加入希望用フィールド
-      player_nickname,
-      player_count,
-      player_gender,
-      player_age,
-      player_location,
-      player_experience,
-      jpa_history,
-      jpa_history_text,
-      player_level,
-      player_game_type,
-      player_frequency,
-      player_availability,
-      player_self_intro
+      // All possible fields from all forms
+      nickname, needed_players, team_location, team_location_detail, team_jpa_history, team_skill_level, team_game_type, team_frequency, team_availability, team_self_intro,
+      player_count, player_gender, player_age, player_location, player_experience, jpa_history, jpa_history_text, player_level, player_game_type, player_frequency, player_availability, player_self_intro,
+      division_location, division_shop, division_teams, division_game_type, division_day
     } = req.body;
     
-    // まず投稿を作成
+    // Filter empty strings for ENUMs and optional fields
+    const filteredPlayerGender = player_gender && player_gender !== '' ? player_gender : null;
+    const filteredPlayerAge = player_age && player_age !== '' ? player_age : null;
+    const filteredPlayerLevel = player_level && player_level !== '' ? player_level : null;
+    const filteredPlayerGameType = player_game_type && player_game_type !== '' ? player_game_type : null;
+    const filteredPlayerFrequency = player_frequency && player_frequency !== '' ? player_frequency : null;
+    const filteredTeamJpaHistory = team_jpa_history && team_jpa_history !== '' ? team_jpa_history : null;
+    const filteredTeamSkillLevel = team_skill_level && team_skill_level !== '' ? team_skill_level : null;
+    const filteredTeamGameType = team_game_type && team_game_type !== '' ? team_game_type : null;
+    const filteredTeamFrequency = team_frequency && team_frequency !== '' ? team_frequency : null;
+    const filteredDivisionGameType = division_game_type && division_game_type !== '' ? division_game_type : null;
+
     const { data: postData, error: postError } = await supabase
       .from('posts')
       .insert([
         {
-          title,
-          content,
-          author_email,
-          author_name,
-          post_type,
-          delete_pin
+          title, content, author_email, author_name, post_type, delete_pin,
+          nickname, needed_players, team_location, team_location_detail, team_jpa_history: filteredTeamJpaHistory, team_skill_level: filteredTeamSkillLevel, team_game_type: filteredTeamGameType, team_frequency: filteredTeamFrequency, team_availability, team_self_intro,
+          player_count, player_gender: filteredPlayerGender, player_age: filteredPlayerAge, player_location, player_experience, jpa_history, jpa_history_text, player_level: filteredPlayerLevel, player_game_type: filteredPlayerGameType, player_frequency: filteredPlayerFrequency, player_availability, player_self_intro,
+          division_location, division_shop, division_teams, division_game_type: filteredDivisionGameType, division_day
         }
       ])
       .select();
@@ -141,211 +100,131 @@ app.post('/api/posts', async (req, res) => {
     
     const postId = postData[0].id;
     
-    // 投稿タイプに応じて詳細情報を挿入
-    if (post_type === 'team-recruit') {
-      const { error: teamError } = await supabase
-        .from('team_recruit_info')
-        .insert([{
-          post_id: postId,
-          team_nickname,
-          needed_players,
-          team_location,
-          team_jpa_history,
-          team_skill_level,
-          team_game_type,
-          team_frequency,
-          team_availability,
-          team_self_intro
-        }]);
-      
-      if (teamError) throw teamError;
-    }
-    
-    if (post_type === 'player-seeking') {
-      const { error: playerError } = await supabase
-        .from('player_seeking_info')
-        .insert([{
-          post_id: postId,
-          player_nickname,
-          player_count,
-          player_gender,
-          player_age,
-          player_location,
-          player_experience,
-          jpa_history,
-          jpa_history_text,
-          player_level,
-          player_game_type,
-          player_frequency,
-          player_availability,
-          player_self_intro
-        }]);
-      
-      if (playerError) throw playerError;
-    }
-    
-    res.json(postData[0]);
+    res.status(201).json({ 
+      success: true, 
+      message: '投稿が作成されました',
+      postId: postId 
+    });
   } catch (error) {
     console.error('投稿作成エラー:', error);
-    console.error('エラーの詳細:', {
-      message: error.message,
-      code: error.code,
-      details: error.details,
-      hint: error.hint
-    });
     res.status(500).json({ error: error.message });
   }
 });
 
-// 投稿詳細取得
+// 個別投稿取得
 app.get('/api/posts/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { data: posts, error } = await supabase
+    
+    const { data, error } = await supabase
       .from('posts')
-      .select(`
-        *,
-        team_recruit_info(*),
-        player_seeking_info(*),
-        division_create_info(*)
-      `)
+      .select('*')
       .eq('id', id);
     
     if (error) throw error;
     
-    if (!posts || posts.length === 0) {
+    if (!data || data.length === 0) {
       return res.status(404).json({ error: '投稿が見つかりません' });
     }
     
-    // 関連データをフラット化
-    const flattened = { ...posts[0] };
-    
-    // チーム募集情報をマージ
-    if (posts[0].team_recruit_info && posts[0].team_recruit_info.length > 0) {
-      const teamInfo = posts[0].team_recruit_info[0];
-      Object.assign(flattened, teamInfo);
-    }
-    
-    // プレイヤー募集情報をマージ
-    if (posts[0].player_seeking_info && posts[0].player_seeking_info.length > 0) {
-      const playerInfo = posts[0].player_seeking_info[0];
-      Object.assign(flattened, playerInfo);
-    }
-    
-    // ディビジョン作成情報をマージ
-    if (posts[0].division_create_info && posts[0].division_create_info.length > 0) {
-      const divisionInfo = posts[0].division_create_info[0];
-      Object.assign(flattened, divisionInfo);
-    }
-    
-    // 不要なネストした配列を削除
-    delete flattened.team_recruit_info;
-    delete flattened.player_seeking_info;
-    delete flattened.division_create_info;
-    
-    res.json(flattened);
+    res.json(data[0]);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// メール送信
-app.post('/api/contact', async (req, res) => {
-  try {
-    const { postId, senderEmail, senderName, message, postTitle, postType } = req.body;
-    
-    // 投稿者情報を取得
-    const { data: post, error: postError } = await supabase
-      .from('posts')
-      .select('author_email, author_name')
-      .eq('id', postId)
-      .single();
-    
-    if (postError) throw postError;
-    
-    // 投稿タイプに応じたメール件名
-    let subject;
-    if (postType === 'team-recruit') {
-      subject = `【ビリヤードチーム募集】「${postTitle}」への加入希望`;
-    } else if (postType === 'player-seeking') {
-      subject = `【ビリヤードチーム加入希望】「${postTitle}」へのチーム募集`;
-    } else {
-      subject = `【ビリヤード仲間探し】投稿「${postTitle}」への連絡`;
-    }
-    
-    // メール送信
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: post.author_email,
-      subject: subject,
-      html: `
-        <h2>JPAMatch ビリヤード仲間探し掲示板からの連絡</h2>
-        <p><strong>投稿タイトル:</strong> ${postTitle}</p>
-        <p><strong>投稿タイプ:</strong> ${postType === 'team-recruit' ? 'チーム募集' : postType === 'player-seeking' ? 'チーム加入希望' : '一般投稿'}</p>
-        <p><strong>連絡者:</strong> ${senderName} (${senderEmail})</p>
-        <p><strong>メッセージ:</strong></p>
-        <p>${message}</p>
-        <hr>
-        <p>このメールはJPAMatchビリヤード仲間探し掲示板システムから自動送信されています。</p>
-        <p>返信する場合は、上記の連絡者メールアドレスに直接返信してください。</p>
-        <p>ビリヤードを通じて素晴らしい仲間との出会いがありますように！</p>
-      `
-    };
-    
-    await transporter.sendMail(mailOptions);
-    
-    res.json({ message: 'メールが正常に送信されました' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// 投稿削除（PIN検証付き）
+// 投稿削除
 app.delete('/api/posts/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { pin } = req.body;
     
-    // 投稿とPIN確認
-    const { data: posts, error: postError } = await supabase
+    console.log('削除リクエスト:', { id, pin });
+    
+    // PINを確認
+    const { data: posts, error: fetchError } = await supabase
       .from('posts')
       .select('delete_pin')
-      .eq('id', id.toString());
+      .eq('id', id);
     
-    if (postError) {
-      console.error('投稿取得エラー:', postError);
-      throw postError;
-    }
+    if (fetchError) throw fetchError;
     
     if (!posts || posts.length === 0) {
-      console.log('投稿が見つかりません:', { id, posts });
       return res.status(404).json({ error: '投稿が見つかりません' });
     }
     
-    const post = posts[0];
-    if (post.delete_pin !== pin) {
-      return res.status(403).json({ error: 'PINが正しくありません' });
+    if (posts[0].delete_pin !== pin) {
+      return res.status(401).json({ error: 'PINが正しくありません' });
     }
     
-    // CASCADE削除により、関連する詳細テーブルのデータも自動削除される
-    const { data, error } = await supabase
+    // 投稿を削除
+    const { error: deleteError } = await supabase
       .from('posts')
       .delete()
-      .eq('id', id.toString());
+      .eq('id', id);
     
-    if (error) {
-      console.error('削除エラー:', error);
-      throw error;
-    }
+    if (deleteError) throw deleteError;
     
-    console.log('削除成功:', data);
-    res.json({ message: '投稿が削除されました' });
+    console.log('削除成功:', deleteError);
+    res.json({ success: true, message: '投稿が削除されました' });
   } catch (error) {
-    console.error('削除処理エラー:', error);
+    console.error('削除エラー:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
+// 連絡フォーム送信
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { postId, senderName, senderEmail, message } = req.body;
+    
+    // 投稿情報を取得
+    const { data: post, error: postError } = await supabase
+      .from('posts')
+      .select('title, author_email, author_name')
+      .eq('id', postId)
+      .single();
+    
+    if (postError) throw postError;
+    
+    // 連絡履歴を保存
+    const { error: logError } = await supabase
+      .from('contact_logs')
+      .insert([{
+        post_id: postId,
+        sender_name: senderName,
+        sender_email: senderEmail,
+        message: message
+      }]);
+    
+    if (logError) throw logError;
+    
+    // メール送信
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: post.author_email,
+      subject: `JPAMatch - 投稿への連絡: ${post.title}`,
+      html: `
+        <h2>JPAMatch からの連絡</h2>
+        <p>投稿「${post.title}」に連絡がありました。</p>
+        <h3>連絡者情報</h3>
+        <p><strong>お名前:</strong> ${senderName}</p>
+        <p><strong>メールアドレス:</strong> ${senderEmail}</p>
+        <h3>メッセージ</h3>
+        <p>${message.replace(/\n/g, '<br>')}</p>
+      `
+    };
+    
+    await transporter.sendMail(mailOptions);
+    
+    res.json({ success: true, message: '連絡が送信されました' });
+  } catch (error) {
+    console.error('連絡送信エラー:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// サーバー起動
 app.listen(PORT, () => {
   console.log(`サーバーが起動しました: http://localhost:${PORT}`);
 });
