@@ -734,7 +734,7 @@ async function handleTeamRecruitSubmit(event) {
     
     const postData = {
         title: `チームメイト募集中`,
-        content: `チーム名・ニックネーム: ${formData.get('teamNickname') || '未設定'}\n募集人数: ${neededPlayers}\n活動地域: ${teamLocationText}\nJPA参加歴: ${getJpaHistoryText(formData.get('teamJpaHistory'))}\n募集スキルレベル: ${getSkillLevelRangeText(formData.get('teamSkillLevel'))}\nプレー種目: ${getGameTypeText(formData.get('teamGameType'))}\n希望参加頻度: ${getFrequencyTextNew(formData.get('teamFrequency'))}\n活動曜日: ${teamAvailability || '未設定'}\n自己紹介: ${formData.get('teamSelfIntro') || '未設定'}`,
+        content: formData.get('teamContent'),
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'team-recruit',
@@ -794,7 +794,7 @@ async function handlePlayerSeekingSubmit(event) {
     
     const postData = {
         title: `チームを探しています`,
-        content: `チーム加入を希望しています。`,
+        content: formData.get('playerContent'),
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'player-seeking',
@@ -837,7 +837,7 @@ async function handleDivisionCreateSubmit(event) {
     
     const postData = {
         title: `ディビジョンを創りたい！`,
-        content: `新しいディビジョンの創設を希望しています。`,
+        content: formData.get('divisionContent'),
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'division-create',
