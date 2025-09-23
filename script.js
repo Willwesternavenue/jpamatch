@@ -458,7 +458,7 @@ function createPostDetails(post) {
                     ${post.team_skill_level ? `<div class="post-detail-item"><span class="post-detail-label">募集したいスキルレベル:</span> ${getSkillLevelRangeText(post.team_skill_level)}</div>` : ''}
                     ${post.team_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレー種目:</span> ${getGameTypeText(post.team_game_type)}</div>` : ''}
                     ${post.team_frequency ? `<div class="post-detail-item"><span class="post-detail-label">望む参加頻度:</span> ${getFrequencyTextNew(post.team_frequency)}</div>` : ''}
-                    ${post.team_availability ? `<div class="post-detail-item"><span class="post-detail-label">活動曜日:</span> ${escapeHtml(post.team_availability)}</div>` : ''}
+                    ${post.team_availability ? `<div class="post-detail-item"><span class="post-detail-label">活動曜日:</span> ${getAvailabilityText(post.team_availability)}</div>` : ''}
                     ${post.team_self_intro ? `<div class="post-detail-item"><span class="post-detail-label">自己紹介:</span> ${escapeHtml(post.team_self_intro)}</div>` : ''}
                 </div>
             </div>
@@ -475,7 +475,7 @@ function createPostDetails(post) {
                     ${post.player_level ? `<div class="post-detail-item"><span class="post-detail-label">スキルレベル:</span> ${getSkillLevelText(post.player_level)}</div>` : ''}
                     ${post.player_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレーしたい種目:</span> ${getGameTypeText(post.player_game_type)}</div>` : ''}
                     ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">参加可能頻度:</span> ${getFrequencyTextNew(post.player_frequency)}</div>` : ''}
-                    ${post.player_availability ? `<div class="post-detail-item"><span class="post-detail-label">参加可能曜日:</span> ${escapeHtml(post.player_availability)}</div>` : ''}
+                    ${post.player_availability ? `<div class="post-detail-item"><span class="post-detail-label">参加可能曜日:</span> ${getAvailabilityText(post.player_availability)}</div>` : ''}
                     ${post.jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${post.jpa_history === 'yes' ? 'あり' : 'なし'}${post.jpa_history_text ? ' (' + escapeHtml(post.jpa_history_text) + ')' : ''}</div>` : ''}
                     ${post.player_self_intro ? `<div class="post-detail-item"><span class="post-detail-label">自己紹介:</span> ${escapeHtml(post.player_self_intro)}</div>` : ''}
                 </div>
@@ -538,6 +538,9 @@ function getAvailabilityText(availability) {
         'weekday-evening': '平日夜',
         'weekend': '週末',
         'weekday-daytime': '平日昼',
+        'weekday': '平日',
+        'weekends': '土日祝',
+        'anytime': 'いつでも',
         'flexible': '時間問わず'
     };
     return availabilityMap[availability] || availability;
@@ -596,6 +599,7 @@ function getFrequencyTextNew(frequency) {
     const frequencyMap = {
         '2plus-per-week': '週2度以上',
         '1-per-week': '週1度',
+        'weekly': '週1度',
         'biweekly': '2週に1度',
         'monthly': '月に1,2度'
     };
