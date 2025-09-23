@@ -353,8 +353,16 @@ async function loadPosts() {
     try {
         postsList.innerHTML = '<div class="loading">投稿を読み込み中...</div>';
         
-        // 実際のAPIを使用（キャッシュバスター付き）
-        const response = await fetch(`${API_BASE_URL}/api/posts?t=${Date.now()}`);
+        // 実際のAPIを使用（強力なキャッシュバスター付き）
+        const cacheBuster = `t=${Date.now()}&r=${Math.random()}`;
+        const response = await fetch(`${API_BASE_URL}/api/posts?${cacheBuster}`, {
+            cache: 'no-cache',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
         const posts = await response.json();
         
         console.log('loadPosts - 取得した投稿数:', posts.length);
@@ -410,6 +418,7 @@ function createPostCard(post) {
     const postTypeClass = post.post_type === 'team-recruit' ? 'team-recruit' : 
                          post.post_type === 'player-seeking' ? 'player-seeking' : 'division-create';
     
+    postCard.setAttribute('data-post-id', post.id);
     postCard.innerHTML = `
         <div class="post-type-badge ${postTypeClass}">${postTypeText}</div>
         <div class="post-header">
@@ -961,12 +970,23 @@ async function deletePost(postId, pin) {
         
         console.log('削除成功、投稿一覧を再読み込み中...');
         
-        // 投稿一覧を再読み込み
+        // 削除された投稿をDOMから直接削除
+        const deletedPostElement = document.querySelector(`[data-post-id="${postId}"]`);
+        if (deletedPostElement) {
+            deletedPostElement.remove();
+            console.log('DOMから投稿を削除しました');
+        }
+        
+        // 投稿一覧を再読み込み（強制キャッシュクリア）
+        console.log('投稿一覧を再読み込み中...');
         await loadPosts();
         
         console.log('投稿一覧の再読み込み完了');
         
-        alert('投稿を削除しました。');
+        // 少し待ってからアラート表示
+        setTimeout(() => {
+            alert('投稿を削除しました。');
+        }, 100);
         
     } catch (error) {
         console.error('削除エラー:', error);
