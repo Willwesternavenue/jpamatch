@@ -1,4 +1,4 @@
--- JPAMatch データベース設計（単一テーブル版）
+-- JPAMatch データベース設計（単一テーブル版 - 修正版）
 -- Supabase PostgreSQL スキーマ
 
 -- 投稿タイプの列挙型
@@ -25,7 +25,7 @@ CREATE TYPE frequency_enum AS ENUM ('weekly', 'biweekly', 'monthly', 'flexible')
 -- スキルレベルの列挙型
 CREATE TYPE skill_level_enum AS ENUM ('1', '2', '3', '4', '5', '6', '7', '8', '9');
 
--- JPA参加歴の列挙型
+-- JPA参加歴の列挙型（修正版）
 CREATE TYPE jpa_history_enum AS ENUM ('none', 'yes', 'participating', 'suspended', 'planned');
 
 -- 活動曜日の列挙型
