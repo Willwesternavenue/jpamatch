@@ -420,6 +420,7 @@ function createPostCard(post) {
     
     postCard.setAttribute('data-post-id', post.id);
     postCard.innerHTML = `
+        <div class="post-type-badge ${postTypeClass}">${postTypeText}</div>
         <div class="post-header">
             <div class="post-content-main">
                 ${post.content && post.content.trim() !== '' ? 
