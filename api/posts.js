@@ -82,6 +82,8 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
+      console.log('POST /api/posts - Request body:', JSON.stringify(req.body, null, 2));
+      
       const { 
         title, 
         content, 
@@ -115,6 +117,10 @@ export default async function handler(req, res) {
         player_self_intro
       } = req.body;
       
+      console.log('Creating post with data:', {
+        title, content, author_email, author_name, post_type, delete_pin
+      });
+      
       // まず投稿を作成
       const { data: postData, error: postError } = await supabase
         .from('posts')
@@ -129,6 +135,8 @@ export default async function handler(req, res) {
           }
         ])
         .select();
+        
+      console.log('Post creation result:', { postData, postError });
       
       if (postError) throw postError;
       
