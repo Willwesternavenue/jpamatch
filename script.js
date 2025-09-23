@@ -428,10 +428,10 @@ function createPostCard(post) {
                     ''
                 }
             </div>
-            <div class="post-meta">
-                <span>投稿者: ${escapeHtml(getDisplayName(post) || '匿名')}</span>
-                <span class="post-date">${date}</span>
-            </div>
+        </div>
+        <div class="post-meta">
+            <span>投稿者: ${escapeHtml(getDisplayName(post) || '匿名')}</span>
+            <span class="post-date">${date}</span>
         </div>
         ${createPostDetails(post)}
         <div class="post-actions">
