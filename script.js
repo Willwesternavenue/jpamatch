@@ -455,7 +455,7 @@ function createPostDetails(post) {
             <div class="post-details">
                 <h4>チーム情報</h4>
                 <div class="post-details-grid">
-                    ${post.team_nickname ? `<div class="post-detail-item"><span class="post-detail-label">チーム名・ニックネーム:</span> ${escapeHtml(post.team_nickname)}</div>` : ''}
+                    ${post.nickname ? `<div class="post-detail-item"><span class="post-detail-label">チーム名・ニックネーム:</span> ${escapeHtml(post.nickname)}</div>` : ''}
                     ${post.needed_players ? `<div class="post-detail-item"><span class="post-detail-label">募集人数:</span> ${post.needed_players}名</div>` : ''}
                     ${post.team_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${getLocationText(post.team_location)}${post.team_location_detail ? ` (${escapeHtml(post.team_location_detail)})` : ''}</div>` : ''}
                     ${post.team_jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${getJpaHistoryText(post.team_jpa_history)}</div>` : ''}
@@ -472,7 +472,7 @@ function createPostDetails(post) {
             <div class="post-details">
                 <h4>プレイヤー情報</h4>
                 <div class="post-details-grid">
-                    ${post.player_nickname ? `<div class="post-detail-item"><span class="post-detail-label">ニックネーム:</span> ${escapeHtml(post.player_nickname)}</div>` : ''}
+                    ${post.nickname ? `<div class="post-detail-item"><span class="post-detail-label">ニックネーム:</span> ${escapeHtml(post.nickname)}</div>` : ''}
                     ${post.player_count ? `<div class="post-detail-item"><span class="post-detail-label">参加希望人数:</span> ${escapeHtml(post.player_count)}</div>` : ''}
                     ${post.player_gender ? `<div class="post-detail-item"><span class="post-detail-label">性別:</span> ${getGenderText(post.player_gender)}</div>` : ''}
                     ${post.player_age ? `<div class="post-detail-item"><span class="post-detail-label">年齢:</span> ${getAgeText(post.player_age)}</div>` : ''}
@@ -650,14 +650,11 @@ function getSkillLevelRangeText(skillLevel) {
 function getDisplayName(post) {
     console.log('getDisplayName called with post:', post);
     console.log('post_type:', post.post_type);
-    console.log('team_nickname:', post.team_nickname);
-    console.log('player_nickname:', post.player_nickname);
+    console.log('nickname:', post.nickname);
     console.log('author_name:', post.author_name);
     
-    if (post.post_type === 'team-recruit' && post.team_nickname) {
-        return post.team_nickname;
-    } else if (post.post_type === 'player-seeking' && post.player_nickname) {
-        return post.player_nickname;
+    if (post.nickname) {
+        return post.nickname;
     }
     return post.author_name || '匿名';
 }
