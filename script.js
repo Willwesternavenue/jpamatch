@@ -429,10 +429,7 @@ function createPostCard(post) {
             <button class="btn btn-secondary" onclick="showContactModal('${post.id}', '${escapeHtml(post.title)}', '${post.post_type || 'general'}')">
                 連絡する
             </button>
-            ${post.author_email === getCurrentUserEmail() ? 
-                `<button class="btn btn-danger" onclick="showDeleteModal('${post.id}', '${escapeHtml(post.title)}')">削除</button>` : 
-                ''
-            }
+            <button class="btn btn-danger" onclick="showDeleteModal('${post.id}', '${escapeHtml(post.title)}')">削除</button>
         </div>
     `;
     
