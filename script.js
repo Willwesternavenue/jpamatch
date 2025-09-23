@@ -357,6 +357,9 @@ async function loadPosts() {
         const response = await fetch(`${API_BASE_URL}/api/posts?t=${Date.now()}`);
         const posts = await response.json();
         
+        console.log('loadPosts - 取得した投稿数:', posts.length);
+        console.log('loadPosts - 投稿データ:', posts);
+        
         if (posts.length === 0) {
             postsList.innerHTML = '<div class="message">まだ投稿がありません。最初の投稿を作成してみましょう！</div>';
             return;
@@ -951,6 +954,7 @@ async function deletePost(postId, pin) {
         }
         
         const result = await response.json();
+        console.log('削除API応答:', result);
         
         // モーダルを閉じる
         document.getElementById('deleteModal').style.display = 'none';
