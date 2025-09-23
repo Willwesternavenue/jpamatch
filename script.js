@@ -420,7 +420,6 @@ function createPostCard(post) {
     
     postCard.setAttribute('data-post-id', post.id);
     postCard.innerHTML = `
-        <div class="post-type-badge ${postTypeClass}">${postTypeText}</div>
         <div class="post-header">
             <div>
                 <h3 class="post-title" onclick="showPostDetail('${post.id}')">${escapeHtml(post.title)}</h3>
