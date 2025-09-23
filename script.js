@@ -653,10 +653,12 @@ function getDisplayName(post) {
     console.log('nickname:', post.nickname);
     console.log('author_name:', post.author_name);
     
+    // ニックネームが必須項目なので、必ずニックネームを表示
     if (post.nickname) {
         return post.nickname;
     }
-    return post.author_name || '匿名';
+    // ニックネームがない場合は「匿名」を表示（本来は発生しないはず）
+    return '匿名';
 }
 
 // 投稿詳細の表示
@@ -736,7 +738,7 @@ async function handleTeamRecruitSubmit(event) {
         author_email: formData.get('authorEmail'),
         post_type: 'team-recruit',
         delete_pin: formData.get('teamPin'),
-        team_nickname: formData.get('teamNickname'),
+        nickname: formData.get('teamNickname'),
         needed_players: neededPlayers,
         team_location: formData.get('teamLocation'),
         team_location_detail: teamLocationDetail,
@@ -796,7 +798,7 @@ async function handlePlayerSeekingSubmit(event) {
         author_email: formData.get('authorEmail'),
         post_type: 'player-seeking',
         delete_pin: formData.get('playerPin'),
-        player_nickname: formData.get('playerNickname'),
+        nickname: formData.get('playerNickname'),
         player_count: playerCount,
         player_gender: playerGender && playerGender !== '' ? playerGender : null,
         player_age: playerAge && playerAge !== '' ? playerAge : null,
@@ -839,6 +841,7 @@ async function handleDivisionCreateSubmit(event) {
         author_email: formData.get('authorEmail'),
         post_type: 'division-create',
         delete_pin: formData.get('divisionPin'),
+        nickname: formData.get('divisionNickname'),
         division_location: formData.get('divisionLocation'),
         division_shop: formData.get('divisionShop'),
         division_teams: divisionTeams,

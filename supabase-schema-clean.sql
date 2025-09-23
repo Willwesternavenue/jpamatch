@@ -44,7 +44,7 @@ CREATE TABLE posts (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     
     -- 共通フィールド
-    nickname VARCHAR(100),  -- チーム募集: team_nickname, チーム探し: player_nickname
+    nickname VARCHAR(100) NOT NULL,  -- チーム募集: team_nickname, チーム探し: player_nickname
     
     -- チーム募集専用フィールド
     needed_players VARCHAR(10),
