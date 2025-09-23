@@ -636,6 +636,12 @@ function getSkillLevelRangeText(skillLevel) {
 
 // 表示用名前の取得
 function getDisplayName(post) {
+    console.log('getDisplayName called with post:', post);
+    console.log('post_type:', post.post_type);
+    console.log('team_nickname:', post.team_nickname);
+    console.log('player_nickname:', post.player_nickname);
+    console.log('author_name:', post.author_name);
+    
     if (post.post_type === 'team-recruit' && post.team_nickname) {
         return post.team_nickname;
     } else if (post.post_type === 'player-seeking' && post.player_nickname) {
