@@ -163,24 +163,31 @@ export default async function handler(req, res) {
       }
       
       if (post_type === 'player-seeking') {
+        // 空の値をフィルタリングしてINSERTデータを作成
+        const playerInsertData = {
+          post_id: postId,
+          player_nickname,
+          player_count,
+          player_location,
+          player_experience,
+          jpa_history,
+          jpa_history_text,
+          player_availability,
+          player_self_intro
+        };
+        
+        // 空でない値のみ追加
+        if (player_gender && player_gender !== '') playerInsertData.player_gender = player_gender;
+        if (player_age && player_age !== '') playerInsertData.player_age = player_age;
+        if (player_level && player_level !== '') playerInsertData.player_level = player_level;
+        if (player_game_type && player_game_type !== '') playerInsertData.player_game_type = player_game_type;
+        if (player_frequency && player_frequency !== '') playerInsertData.player_frequency = player_frequency;
+        
+        console.log('Player seeking insert data:', playerInsertData);
+        
         const { error: playerError } = await supabase
           .from('player_seeking_info')
-          .insert([{
-            post_id: postId,
-            player_nickname,
-            player_count,
-            player_gender,
-            player_age,
-            player_location,
-            player_experience,
-            jpa_history,
-            jpa_history_text,
-            player_level,
-            player_game_type,
-            player_frequency,
-            player_availability,
-            player_self_intro
-          }]);
+          .insert([playerInsertData]);
         
         if (playerError) throw playerError;
       }

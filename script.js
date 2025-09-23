@@ -768,6 +768,13 @@ async function handlePlayerSeekingSubmit(event) {
         authorEmail: formData.get('authorEmail')
     });
     
+    // 空の値をフィルタリング
+    const playerAge = formData.get('playerAge');
+    const playerGender = formData.get('playerGender');
+    const playerLevel = formData.get('playerLevel');
+    const playerGameType = formData.get('playerGameType');
+    const playerFrequency = formData.get('playerFrequency');
+    
     const postData = {
         title: `チームを探しています`,
         content: `チーム加入を希望しています。`,
@@ -777,15 +784,15 @@ async function handlePlayerSeekingSubmit(event) {
         delete_pin: formData.get('playerPin'),
         player_nickname: formData.get('playerNickname'),
         player_count: playerCount,
-        player_gender: formData.get('playerGender'),
-        player_age: formData.get('playerAge'),
+        player_gender: playerGender && playerGender !== '' ? playerGender : null,
+        player_age: playerAge && playerAge !== '' ? playerAge : null,
         player_location: formData.get('playerLocation'),
         player_experience: formData.get('playerExperience'),
         jpa_history: jpaHistory,
         jpa_history_text: jpaHistoryText,
-        player_level: formData.get('playerLevel'),
-        player_game_type: formData.get('playerGameType'),
-        player_frequency: formData.get('playerFrequency'),
+        player_level: playerLevel && playerLevel !== '' ? playerLevel : null,
+        player_game_type: playerGameType && playerGameType !== '' ? playerGameType : null,
+        player_frequency: playerFrequency && playerFrequency !== '' ? playerFrequency : null,
         player_availability: playerAvailability,
         player_self_intro: formData.get('playerSelfIntro')
     };
