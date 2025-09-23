@@ -421,19 +421,16 @@ function createPostCard(post) {
     postCard.setAttribute('data-post-id', post.id);
     postCard.innerHTML = `
         <div class="post-header">
-            <div>
-                <h3 class="post-title" onclick="showPostDetail('${post.id}')">${escapeHtml(post.title)}</h3>
-                <div class="post-meta">
-                    <span>投稿者: ${escapeHtml(getDisplayName(post) || '匿名')}</span>
-                    <span class="post-date">${date}</span>
-                </div>
+            <div class="post-content-main">
+                ${post.content && post.content.trim() !== '' ? 
+                    escapeHtml(post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content) : 
+                    ''
+                }
             </div>
-        </div>
-        <div class="post-content">
-            ${post.content && post.content.trim() !== '' ? 
-                escapeHtml(post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content) : 
-                ''
-            }
+            <div class="post-meta">
+                <span>投稿者: ${escapeHtml(getDisplayName(post) || '匿名')}</span>
+                <span class="post-date">${date}</span>
+            </div>
         </div>
         ${createPostDetails(post)}
         <div class="post-actions">
@@ -454,7 +451,6 @@ function createPostDetails(post) {
             <div class="post-details">
                 <h4>チーム情報</h4>
                 <div class="post-details-grid">
-                    ${post.nickname ? `<div class="post-detail-item"><span class="post-detail-label">チーム名・ニックネーム:</span> ${escapeHtml(post.nickname)}</div>` : ''}
                     ${post.needed_players ? `<div class="post-detail-item"><span class="post-detail-label">募集人数:</span> ${post.needed_players}名</div>` : ''}
                     ${post.team_location ? `<div class="post-detail-item"><span class="post-detail-label">活動地域:</span> ${getLocationText(post.team_location)}${post.team_location_detail ? ` (${escapeHtml(post.team_location_detail)})` : ''}</div>` : ''}
                     ${post.team_jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${getJpaHistoryText(post.team_jpa_history)}</div>` : ''}
@@ -471,7 +467,6 @@ function createPostDetails(post) {
             <div class="post-details">
                 <h4>プレイヤー情報</h4>
                 <div class="post-details-grid">
-                    ${post.nickname ? `<div class="post-detail-item"><span class="post-detail-label">ニックネーム:</span> ${escapeHtml(post.nickname)}</div>` : ''}
                     ${post.player_count ? `<div class="post-detail-item"><span class="post-detail-label">参加希望人数:</span> ${escapeHtml(post.player_count)}</div>` : ''}
                     ${post.player_gender ? `<div class="post-detail-item"><span class="post-detail-label">性別:</span> ${getGenderText(post.player_gender)}</div>` : ''}
                     ${post.player_age ? `<div class="post-detail-item"><span class="post-detail-label">年齢:</span> ${getAgeText(post.player_age)}</div>` : ''}
