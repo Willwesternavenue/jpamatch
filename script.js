@@ -762,6 +762,12 @@ async function handlePlayerSeekingSubmit(event) {
         playerAvailability = formData.get('playerAvailabilityOtherText');
     }
     
+    console.log('Player seeking form data:', {
+        playerNickname: formData.get('playerNickname'),
+        authorName: formData.get('authorName'),
+        authorEmail: formData.get('authorEmail')
+    });
+    
     const postData = {
         title: `チームを探しています`,
         content: `チーム加入を希望しています。`,
