@@ -1,11 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const path = require('path');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import path from 'path';
+import dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
-const { createClient } = require('@supabase/supabase-js');
-const nodemailer = require('nodemailer');
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;

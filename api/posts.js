@@ -1,4 +1,4 @@
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
 
 // Supabaseクライアントの初期化
 const supabaseUrl = process.env.SUPABASE_URL;
