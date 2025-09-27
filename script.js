@@ -736,7 +736,7 @@ async function handleTeamRecruitSubmit(event) {
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'team-recruit',
-        delete_pin: '0000', // デフォルトPIN
+        delete_pin: formData.get('teamPin'),
         nickname: formData.get('teamNickname'),
         needed_players: neededPlayers,
         team_location: formData.get('teamLocation'),
@@ -796,7 +796,7 @@ async function handlePlayerSeekingSubmit(event) {
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'player-seeking',
-        delete_pin: '0000', // デフォルトPIN
+        delete_pin: formData.get('playerPin'),
         nickname: formData.get('playerNickname'),
         player_count: playerCount,
         player_gender: playerGender && playerGender !== '' ? playerGender : null,
@@ -839,7 +839,7 @@ async function handleDivisionCreateSubmit(event) {
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'division-create',
-        delete_pin: '0000', // デフォルトPIN
+        delete_pin: formData.get('divisionPin'),
         nickname: formData.get('divisionNickname'),
         division_location: formData.get('divisionLocation'),
         division_shop: formData.get('divisionShop'),
