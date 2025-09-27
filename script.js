@@ -929,7 +929,7 @@ async function handleContactSubmit(event) {
         
         if (response.ok) {
             const result = await response.json();
-            showMessage('メールが正常に送信されました！確認メールも送信いたしました。', 'success');
+            showMessage('✅ メール送信完了！投稿者への連絡メールと、あなたへの確認メールの両方を送信しました。', 'success');
             contactForm.reset();
             contactModal.style.display = 'none';
         } else {
@@ -1091,16 +1091,35 @@ function showMessage(message, type = 'success') {
     messageDiv.className = `message ${type}`;
     messageDiv.textContent = message;
     
-    // 投稿タイプ選択セクションの上に表示
-    const postTypeSection = document.querySelector('.post-type-section');
-    postTypeSection.parentNode.insertBefore(messageDiv, postTypeSection);
+    // スタイルを追加してより目立つようにする
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10000;
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        ${type === 'success' ? 
+            'background: #27ae60; color: white;' : 
+            'background: #e74c3c; color: white;'
+        }
+    `;
     
-    // 3秒後に自動削除
+    // bodyに直接追加
+    document.body.appendChild(messageDiv);
+    
+    // 5秒後に自動削除
     setTimeout(() => {
         if (messageDiv.parentNode) {
             messageDiv.remove();
         }
-    }, 3000);
+    }, 5000);
 }
 
 // HTMLエスケープ
