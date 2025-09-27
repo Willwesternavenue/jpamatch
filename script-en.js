@@ -29,20 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
     hideAllForms();
     
     // Check if we're on create tab and show default form
-    setTimeout(() => {
-        const createTab = document.getElementById('createTab');
-        if (createTab && createTab.classList.contains('active')) {
-            const teamRecruitForm = document.getElementById('teamRecruitForm');
-            if (teamRecruitForm) {
-                teamRecruitForm.style.display = 'block';
-                teamRecruitForm.classList.add('active');
-            }
-            const teamButton = document.querySelector('[data-type="team-recruit"]');
-            if (teamButton) {
-                teamButton.classList.add('active');
-            }
+    const createTab = document.getElementById('createTab');
+    if (createTab && createTab.classList.contains('active')) {
+        const teamRecruitForm = document.getElementById('teamRecruitForm');
+        if (teamRecruitForm) {
+            teamRecruitForm.style.display = 'block';
         }
-    }, 200);
+        const teamButton = document.querySelector('[data-type="team-recruit"]');
+        if (teamButton) {
+            teamButton.classList.add('active');
+        }
+    }
 });
 
 // Setup event listeners
@@ -122,27 +119,26 @@ function switchTab(tabName) {
     if (tabName === 'create') {
         hideAllForms();
         // Show team recruit form by default
-        setTimeout(() => {
-            const teamRecruitForm = document.getElementById('teamRecruitForm');
-            if (teamRecruitForm) {
-                teamRecruitForm.style.display = 'block';
-                teamRecruitForm.classList.add('active');
-            }
-            const teamButton = document.querySelector('[data-type="team-recruit"]');
-            if (teamButton) {
-                teamButton.classList.add('active');
-            }
-        }, 100);
+        const teamRecruitForm = document.getElementById('teamRecruitForm');
+        if (teamRecruitForm) {
+            teamRecruitForm.style.display = 'block';
+        }
+        const teamButton = document.querySelector('[data-type="team-recruit"]');
+        if (teamButton) {
+            teamButton.classList.add('active');
+        }
     }
 }
 
 // Hide all forms
 function hideAllForms() {
-    const forms = document.querySelectorAll('.post-form-section');
-    forms.forEach(form => {
-        form.style.display = 'none';
-        form.classList.remove('active');
-    });
+    const teamRecruitForm = document.getElementById('teamRecruitForm');
+    const playerSeekingForm = document.getElementById('playerSeekingForm');
+    const divisionCreateForm = document.getElementById('divisionCreateForm');
+    
+    if (teamRecruitForm) teamRecruitForm.style.display = 'none';
+    if (playerSeekingForm) playerSeekingForm.style.display = 'none';
+    if (divisionCreateForm) divisionCreateForm.style.display = 'none';
     
     // Reset post type buttons
     postTypeButtons.forEach(btn => btn.classList.remove('active'));
@@ -216,27 +212,32 @@ function setupDynamicFields() {
 
 // Post type switching
 function switchPostType(type) {
-    // Hide all forms with proper timing
-    const forms = document.querySelectorAll('.post-form-section');
-    forms.forEach(form => {
-        form.style.display = 'none';
-        form.classList.remove('active');
-    });
-    
-    // Show selected form with proper timing
-    setTimeout(() => {
-        const selectedForm = document.getElementById(`${type}Form`);
-        if (selectedForm) {
-            selectedForm.style.display = 'block';
-            selectedForm.classList.add('active');
-        }
-    }, 50);
+    // Get form elements
+    const teamRecruitForm = document.getElementById('teamRecruitForm');
+    const playerSeekingForm = document.getElementById('playerSeekingForm');
+    const divisionCreateForm = document.getElementById('divisionCreateForm');
     
     // Update button states
-    postTypeButtons.forEach(btn => btn.classList.remove('active'));
-    const activeButton = document.querySelector(`[data-type="${type}"]`);
-    if (activeButton) {
-        activeButton.classList.add('active');
+    postTypeButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.type === type) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Switch form display
+    if (type === 'team-recruit') {
+        teamRecruitForm.style.display = 'block';
+        playerSeekingForm.style.display = 'none';
+        divisionCreateForm.style.display = 'none';
+    } else if (type === 'player-seeking') {
+        teamRecruitForm.style.display = 'none';
+        playerSeekingForm.style.display = 'block';
+        divisionCreateForm.style.display = 'none';
+    } else if (type === 'division-create') {
+        teamRecruitForm.style.display = 'none';
+        playerSeekingForm.style.display = 'none';
+        divisionCreateForm.style.display = 'block';
     }
 }
 
