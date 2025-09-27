@@ -24,6 +24,25 @@ let currentFilter = 'all';
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     loadPosts();
+    
+    // Initialize form display state
+    hideAllForms();
+    
+    // Show team recruit form by default if on create tab
+    const createTab = document.getElementById('createTab');
+    if (createTab && createTab.classList.contains('active')) {
+        setTimeout(() => {
+            const teamRecruitForm = document.getElementById('teamRecruitForm');
+            if (teamRecruitForm) {
+                teamRecruitForm.style.display = 'block';
+                teamRecruitForm.classList.add('active');
+            }
+            const teamButton = document.querySelector('[data-type="team-recruit"]');
+            if (teamButton) {
+                teamButton.classList.add('active');
+            }
+        }, 100);
+    }
 });
 
 // Setup event listeners
@@ -102,13 +121,14 @@ function switchTab(tabName) {
 
 // Hide all forms
 function hideAllForms() {
-    const teamRecruitForm = document.getElementById('teamRecruitForm');
-    const playerSeekingForm = document.getElementById('playerSeekingForm');
-    const divisionCreateForm = document.getElementById('divisionCreateForm');
+    const forms = document.querySelectorAll('.post-form-section');
+    forms.forEach(form => {
+        form.style.display = 'none';
+        form.classList.remove('active');
+    });
     
-    if (teamRecruitForm) teamRecruitForm.style.display = 'none';
-    if (playerSeekingForm) playerSeekingForm.style.display = 'none';
-    if (divisionCreateForm) divisionCreateForm.style.display = 'none';
+    // Reset post type buttons
+    postTypeButtons.forEach(btn => btn.classList.remove('active'));
 }
 
 // Dynamic fields setup
@@ -179,15 +199,21 @@ function setupDynamicFields() {
 
 // Post type switching
 function switchPostType(type) {
-    // Hide all forms
+    // Hide all forms with proper timing
     const forms = document.querySelectorAll('.post-form-section');
-    forms.forEach(form => form.style.display = 'none');
+    forms.forEach(form => {
+        form.style.display = 'none';
+        form.classList.remove('active');
+    });
     
-    // Show selected form
-    const selectedForm = document.getElementById(`${type}Form`);
-    if (selectedForm) {
-        selectedForm.style.display = 'block';
-    }
+    // Show selected form with proper timing
+    setTimeout(() => {
+        const selectedForm = document.getElementById(`${type}Form`);
+        if (selectedForm) {
+            selectedForm.style.display = 'block';
+            selectedForm.classList.add('active');
+        }
+    }, 50);
     
     // Update button states
     postTypeButtons.forEach(btn => btn.classList.remove('active'));

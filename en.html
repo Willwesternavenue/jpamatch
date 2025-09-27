@@ -195,10 +195,9 @@
                             <small class="form-help">Required when deleting posts. Please make a note of it.</small>
                         </div>
                         
+                        <input type="hidden" name="postType" value="team-recruit">
+                        <button type="submit" class="btn btn-primary">Post</button>
                     </div>
-                    
-                    <input type="hidden" name="postType" value="team-recruit">
-                    <button type="submit" class="btn btn-primary">Post</button>
                 </form>
             </section>
 
@@ -361,8 +360,10 @@
                         <input type="password" id="playerPin" name="playerPin" pattern="[0-9]{4}" maxlength="4" required placeholder="e.g., 1234">
                         <small class="form-help">Required when deleting posts. Please make a note of it.</small>
                     </div>
+                    
                     <input type="hidden" name="postType" value="player-seeking">
                     <button type="submit" class="btn btn-secondary">Post</button>
+                </div>
                 </form>
             </section>
 
@@ -462,8 +463,10 @@
                         <input type="password" id="divisionPin" name="divisionPin" pattern="[0-9]{4}" maxlength="4" required placeholder="e.g., 1234">
                         <small class="form-help">Required when deleting posts. Please make a note of it.</small>
                     </div>
+                    
                     <input type="hidden" name="postType" value="division-create">
                     <button type="submit" class="btn btn-tertiary">Post</button>
+                </div>
                 </form>
             </section>
             </div>
