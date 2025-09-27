@@ -96,6 +96,24 @@ function switchTab(tabName) {
     if (activeContent) {
         activeContent.classList.add('active');
     }
+    
+    // 投稿一覧タブに戻る際は、すべてのフォームを非表示にする
+    if (tabName === 'posts') {
+        hideAllForms();
+        // 投稿一覧を再読み込み
+        loadPosts();
+    }
+}
+
+// すべてのフォームを非表示にする
+function hideAllForms() {
+    const teamRecruitForm = document.getElementById('teamRecruitForm');
+    const playerSeekingForm = document.getElementById('playerSeekingForm');
+    const divisionCreateForm = document.getElementById('divisionCreateForm');
+    
+    if (teamRecruitForm) teamRecruitForm.style.display = 'none';
+    if (playerSeekingForm) playerSeekingForm.style.display = 'none';
+    if (divisionCreateForm) divisionCreateForm.style.display = 'none';
 }
 
 // 動的フィールドの設定
