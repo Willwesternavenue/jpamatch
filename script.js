@@ -510,7 +510,7 @@ function createPostDetails(post) {
                     ${post.division_shop ? `<div class="post-detail-item"><span class="post-detail-label">主な活動店舗:</span> ${escapeHtml(post.division_shop)}</div>` : ''}
                     ${post.division_teams ? `<div class="post-detail-item"><span class="post-detail-label">募集チーム数:</span> ${escapeHtml(post.division_teams)}</div>` : ''}
                     ${post.division_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレー種目:</span> ${getGameTypeText(post.division_game_type)}</div>` : ''}
-                    ${post.division_day ? `<div class="post-detail-item"><span class="post-detail-label">活動曜日:</span> ${escapeHtml(post.division_day)}</div>` : ''}
+                    ${post.division_day ? `<div class="post-detail-item"><span class="post-detail-label">活動曜日:</span> ${getDivisionDayText(post.division_day)}</div>` : ''}
                 </div>
             </div>
         `;
@@ -564,6 +564,17 @@ function getAvailabilityText(availability) {
         'flexible': '時間問わず'
     };
     return availabilityMap[availability] || availability;
+}
+
+// ディビジョン活動曜日テキストの取得
+function getDivisionDayText(day) {
+    const dayMap = {
+        'weekday': '平日',
+        'weekend': '土日祝',
+        'decide': 'これから決める',
+        'other': 'その他'
+    };
+    return dayMap[day] || day;
 }
 
 // 性別テキストの取得
