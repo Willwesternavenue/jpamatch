@@ -438,7 +438,6 @@ function createPostCard(post) {
             <button class="btn btn-secondary" onclick="showContactModal('${post.id}', '${escapeHtml(post.title)}', '${post.post_type || 'general'}')">
                 連絡する
             </button>
-            <button class="btn btn-danger" onclick="showDeleteModal('${post.id}', '${escapeHtml(post.title)}')">削除</button>
         </div>
     `;
     
@@ -921,83 +920,6 @@ async function handleContactSubmit(event) {
     }
 }
 
-// 投稿の削除
-// PIN削除モーダルを表示
-function showDeleteModal(postId, postTitle) {
-    try {
-        const deleteModal = document.getElementById('deleteModal');
-        const deletePinInput = document.getElementById('deletePin');
-        
-        if (!deleteModal || !deletePinInput) {
-            console.error('削除モーダルの要素が見つかりません');
-            alert('削除モーダルの初期化に失敗しました。ページを再読み込みしてください。');
-            return;
-        }
-        
-        // 投稿IDをモーダルに保存
-        deleteModal.dataset.postId = postId;
-        
-        // モーダルを表示
-        deleteModal.style.display = 'block';
-        deletePinInput.value = '';
-        deletePinInput.focus();
-        
-        console.log('削除モーダルを表示しました。投稿ID:', postId);
-    } catch (error) {
-        console.error('削除モーダル表示エラー:', error);
-        alert('削除モーダルの表示に失敗しました。');
-    }
-}
-
-// 投稿削除（PIN検証付き）
-async function deletePost(postId, pin) {
-    try {
-        console.log('削除開始:', { postId, pin });
-        
-        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ pin: pin })
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || '削除に失敗しました');
-        }
-        
-        const result = await response.json();
-        console.log('削除API応答:', result);
-        
-        // モーダルを閉じる
-        document.getElementById('deleteModal').style.display = 'none';
-        
-        console.log('削除成功、投稿一覧を再読み込み中...');
-        
-        // 削除された投稿をDOMから直接削除
-        const deletedPostElement = document.querySelector(`[data-post-id="${postId}"]`);
-        if (deletedPostElement) {
-            deletedPostElement.remove();
-            console.log('DOMから投稿を削除しました');
-        }
-        
-        // 投稿一覧を再読み込み（強制キャッシュクリア）
-        console.log('投稿一覧を再読み込み中...');
-        await loadPosts();
-        
-        console.log('投稿一覧の再読み込み完了');
-        
-        // 少し待ってからアラート表示
-        setTimeout(() => {
-            alert('投稿を削除しました。');
-        }, 100);
-        
-    } catch (error) {
-        console.error('削除エラー:', error);
-        alert('投稿の削除に失敗しました。');
-    }
-}
 
 // メッセージの表示
 function showMessage(message, type = 'success') {
@@ -1059,61 +981,3 @@ divisionCreateFormElement.addEventListener('submit', (event) => {
     }
 });
 
-// 削除モーダルの初期化（即座に実行）
-function initializeDeleteModal() {
-    const deleteModal = document.getElementById('deleteModal');
-    const deleteForm = document.getElementById('deleteForm');
-    const cancelBtn = document.getElementById('cancelDelete');
-    
-    if (!deleteModal || !deleteForm || !cancelBtn) {
-        console.error('削除モーダルの要素が見つかりません');
-        return;
-    }
-    
-    // 既存のイベントリスナーを削除
-    const newDeleteForm = deleteForm.cloneNode(true);
-    deleteForm.parentNode.replaceChild(newDeleteForm, deleteForm);
-    
-    // 削除フォームのイベントリスナー
-    newDeleteForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const pin = document.getElementById('deletePin').value;
-        if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-            alert('4桁の数字を入力してください。');
-            return;
-        }
-        
-        // 投稿IDはdata属性から取得
-        const postId = deleteModal.dataset.postId;
-        if (postId) {
-            deletePost(postId, pin);
-        }
-    });
-    
-    // キャンセルボタン
-    document.getElementById('cancelDelete').addEventListener('click', () => {
-        deleteModal.style.display = 'none';
-    });
-    
-    // モーダルの閉じるボタン
-    const closeBtn = deleteModal.querySelector('.close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            deleteModal.style.display = 'none';
-        });
-    }
-    
-    // モーダル外クリックで閉じる
-    deleteModal.addEventListener('click', (e) => {
-        if (e.target === deleteModal) {
-            deleteModal.style.display = 'none';
-        }
-    });
-}
-
-// ページ読み込み時に初期化
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeDeleteModal);
-} else {
-    initializeDeleteModal();
-}
