@@ -28,10 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize form display state
     hideAllForms();
     
-    // Show team recruit form by default if on create tab
-    const createTab = document.getElementById('createTab');
-    if (createTab && createTab.classList.contains('active')) {
-        setTimeout(() => {
+    // Check if we're on create tab and show default form
+    setTimeout(() => {
+        const createTab = document.getElementById('createTab');
+        if (createTab && createTab.classList.contains('active')) {
             const teamRecruitForm = document.getElementById('teamRecruitForm');
             if (teamRecruitForm) {
                 teamRecruitForm.style.display = 'block';
@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (teamButton) {
                 teamButton.classList.add('active');
             }
-        }, 100);
-    }
+        }
+    }, 200);
 });
 
 // Setup event listeners
@@ -111,11 +111,28 @@ function switchTab(tabName) {
         activeContent.classList.add('active');
     }
     
-    // When returning to posts tab, hide all forms
+    // When switching to posts tab, hide all forms
     if (tabName === 'posts') {
         hideAllForms();
         // Reload posts
         loadPosts();
+    }
+    
+    // When switching to create tab, show default form
+    if (tabName === 'create') {
+        hideAllForms();
+        // Show team recruit form by default
+        setTimeout(() => {
+            const teamRecruitForm = document.getElementById('teamRecruitForm');
+            if (teamRecruitForm) {
+                teamRecruitForm.style.display = 'block';
+                teamRecruitForm.classList.add('active');
+            }
+            const teamButton = document.querySelector('[data-type="team-recruit"]');
+            if (teamButton) {
+                teamButton.classList.add('active');
+            }
+        }, 100);
     }
 }
 
