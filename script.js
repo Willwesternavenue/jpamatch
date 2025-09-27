@@ -402,6 +402,7 @@ function displayPosts(posts) {
 
 // 投稿カードの作成
 function createPostCard(post) {
+    
     const postCard = document.createElement('div');
     postCard.className = `post-card ${post.post_type || 'general'}`;
     
@@ -419,13 +420,14 @@ function createPostCard(post) {
                          post.post_type === 'player-seeking' ? 'player-seeking' : 'division-create';
     
     postCard.setAttribute('data-post-id', post.id);
+    
     postCard.innerHTML = `
         <div class="post-type-badge ${postTypeClass}">${postTypeText}</div>
         <div class="post-header">
             <div class="post-content-main">
                 ${post.content && post.content.trim() !== '' ? 
                     escapeHtml(post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content) : 
-                    ''
+                    escapeHtml(post.title || 'タイトルなし')
                 }
             </div>
         </div>
@@ -748,6 +750,7 @@ async function handleTeamRecruitSubmit(event) {
         team_availability: teamAvailability,
         team_self_intro: formData.get('teamSelfIntro')
     };
+    
     
     await submitPost(postData, 'チーム募集が正常に投稿されました！');
 }

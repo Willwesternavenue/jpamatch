@@ -200,15 +200,16 @@
                             <textarea id="teamSelfIntro" name="teamSelfIntro" rows="3" maxlength="100" placeholder="100文字以内で自己紹介を入力してください"></textarea>
                         </div>
                         
+                        <div class="form-group">
+                            <label for="teamPin">削除用PIN（4桁の数字） *</label>
+                            <input type="password" id="teamPin" name="teamPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
+                            <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
+                        </div>
+                        
+                        <input type="hidden" name="postType" value="team-recruit">
+                        <button type="submit" class="btn btn-primary">投稿する</button>
+                        
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="teamPin">削除用PIN（4桁の数字） *</label>
-                        <input type="password" id="teamPin" name="teamPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
-                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
-                    </div>
-                    <input type="hidden" name="postType" value="team-recruit">
-                    <button type="submit" class="btn btn-primary">投稿する</button>
                 </form>
             </section>
 
