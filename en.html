@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPAMatch - Billiard Team Finder</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" type="image/png" href="./logo.png">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="./logo.png" alt="JPAMatch Logo">
+                <h1>JPAMatch</h1>
+            </div>
+            <nav class="nav">
+                <a href="./index.html" class="nav-link">日本語</a>
+                <a href="./en.html" class="nav-link active">English</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="hero">
+                <h2>🏆 Find Your Billiard Team</h2>
+                <p>Connect with billiard players and teams across Japan</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="posts">Posts</button>
+                <button class="tab-btn" data-tab="create">Create Post</button>
+            </div>
+
+            <!-- Posts Tab -->
+            <div id="postsTab" class="tab-content active">
+                <section class="posts-section">
+                    <h2>Posts</h2>
+                    <div class="posts-filter">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="team-recruit">Team Recruiting</button>
+                        <button class="filter-btn" data-filter="player-seeking">Looking for Team</button>
+                        <button class="filter-btn" data-filter="division-create">Create Division</button>
+                    </div>
+                    <div id="postsList" class="posts-list">
+                        <!-- Posts will be dynamically displayed here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Create Post Tab -->
+            <div id="createTab" class="tab-content">
+                <div class="post-type-section">
+                    <h2>Create New Post</h2>
+                    <div class="post-type-buttons">
+                        <button class="post-type-btn active" data-type="team-recruit">🏆 Team Recruiting</button>
+                        <button class="post-type-btn" data-type="player-seeking">👤 Looking for Team</button>
+                        <button class="post-type-btn" data-type="division-create">🏢 Create Division</button>
+                    </div>
+                </div>
+
+                <!-- Team Recruiting Form -->
+                <section id="teamRecruitForm" class="post-form-section team-form">
+                    <h2>🏆 Team Recruiting</h2>
+                    <p class="form-note">* Required fields</p>
+                    <form id="teamRecruitFormElement" class="post-form">
+                        <!-- Private Information -->
+                        <div class="form-section-header">
+                            <h3>Private Information</h3>
+                            <p>This information will be kept private</p>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="teamCaptainName">Your Name (Private) *</label>
+                                <input type="text" id="teamCaptainName" name="authorName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teamCaptainEmail">Email Address (Private) *</label>
+                                <input type="email" id="teamCaptainEmail" name="authorEmail" required placeholder="Email address to receive contact notifications">
+                            </div>
+                        </div>
+                        
+                        <!-- Public Information -->
+                        <div class="form-section-header">
+                            <h3>Public Information</h3>
+                            <p>This information will be visible to other users</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamTitle">Title *</label>
+                            <input type="text" id="teamTitle" name="teamTitle" required maxlength="15" placeholder="Enter within 15 characters">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="teamNickname">Team Name / Nickname *</label>
+                                <input type="text" id="teamNickname" name="teamNickname" required placeholder="e.g., Billiard Club Ace">
+                            </div>
+                            <div class="form-group">
+                                <label for="neededPlayers">Number of Players Needed *</label>
+                                <select id="neededPlayers" name="neededPlayers" required>
+                                    <option value="">Please select</option>
+                                    <option value="1">1 person</option>
+                                    <option value="2">2 people</option>
+                                    <option value="3">3 people</option>
+                                    <option value="other">Other (specify)</option>
+                                </select>
+                                <div id="neededPlayersOther" class="form-group" style="display: none;">
+                                    <input type="text" id="neededPlayersOtherText" name="neededPlayersOtherText" placeholder="Please specify">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamLocation">Activity Area (More specific areas make it easier to find) *</label>
+                            <select id="teamLocation" name="teamLocation" required>
+                                <option value="">Please select</option>
+                                <option value="hokkaido">Hokkaido</option>
+                                <option value="tohoku">Tohoku</option>
+                                <option value="kanto">Kanto</option>
+                                <option value="capital">Capital Region</option>
+                                <option value="tokai">Tokai</option>
+                                <option value="hokuriku">Hokuriku</option>
+                                <option value="kansai">Kansai</option>
+                                <option value="chugoku">Chugoku</option>
+                                <option value="shikoku">Shikoku</option>
+                                <option value="kyushu">Kyushu</option>
+                                <option value="okinawa">Okinawa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamLocationDetail">Area Details *</label>
+                            <input type="text" id="teamLocationDetail" name="teamLocationDetail" placeholder="e.g., Shinjuku, Tokyo">
+                        </div>
+                        <div class="form-group">
+                            <label for="teamJpaHistory">JPA Participation History *</label>
+                            <select id="teamJpaHistory" name="teamJpaHistory" required>
+                                <option value="">Please select</option>
+                                <option value="participating">Currently participating</option>
+                                <option value="suspended">Previously participated, currently suspended</option>
+                                <option value="planning">Planning to participate</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamSkillLevel">Desired Skill Level Range for Teammates *</label>
+                            <select id="teamSkillLevel" name="teamSkillLevel" required>
+                                <option value="">Please select</option>
+                                <option value="1-3">1-3</option>
+                                <option value="3-4">3-4</option>
+                                <option value="4-5">4-5</option>
+                                <option value="5-7">5-7</option>
+                                <option value="7-9">7-9</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamGameType">Game Type</label>
+                            <select id="teamGameType" name="teamGameType">
+                                <option value="">Please select</option>
+                                <option value="8ball">8-Ball</option>
+                                <option value="9ball">9-Ball</option>
+                                <option value="both">Either</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamFrequency">Desired Participation Frequency for Teammates</label>
+                            <select id="teamFrequency" name="teamFrequency">
+                                <option value="">Please select</option>
+                                <option value="more-than-weekly">More than once a week</option>
+                                <option value="weekly">Once a week</option>
+                                <option value="biweekly">Once every two weeks</option>
+                                <option value="monthly">1-2 times a month</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamAvailability">Activity Days</label>
+                            <select id="teamAvailability" name="teamAvailability">
+                                <option value="">Please select</option>
+                                <option value="weekday">Weekdays</option>
+                                <option value="weekend">Weekends/Holidays</option>
+                                <option value="anytime">Anytime</option>
+                                <option value="other">Other (specify)</option>
+                            </select>
+                            <div id="teamAvailabilityOther" class="form-group" style="display: none;">
+                                <input type="text" id="teamAvailabilityOtherText" name="teamAvailabilityOtherText" placeholder="Please specify">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="teamSelfIntro">Self Introduction</label>
+                            <textarea id="teamSelfIntro" name="teamSelfIntro" rows="3" maxlength="100" placeholder="Enter self-introduction within 100 characters"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="teamPin">Delete PIN (4 digits) *</label>
+                            <input type="password" id="teamPin" name="teamPin" pattern="[0-9]{4}" maxlength="4" required placeholder="e.g., 1234">
+                            <small class="form-help">Required when deleting posts. Please make a note of it.</small>
+                        </div>
+                        
+                    </div>
+                    
+                    <input type="hidden" name="postType" value="team-recruit">
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </form>
+            </section>
+
+            <!-- Looking for Team Form -->
+            <section id="playerSeekingForm" class="post-form-section player-form" style="display: none;">
+                <h2>👤 Looking for Team</h2>
+                <p class="form-note">* Required fields</p>
+                <form id="playerSeekingFormElement" class="post-form">
+                    <!-- Private Information -->
+                    <div class="form-section-header">
+                        <h3>Private Information</h3>
+                        <p>This information will be kept private</p>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="playerCaptainName">Your Name (Private) *</label>
+                            <input type="text" id="playerCaptainName" name="authorName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="playerCaptainEmail">Email Address (Private) *</label>
+                            <input type="email" id="playerCaptainEmail" name="authorEmail" required placeholder="Email address to receive contact notifications">
+                        </div>
+                    </div>
+                    
+                    <!-- Public Information -->
+                    <div class="form-section-header">
+                        <h3>Public Information</h3>
+                        <p>This information will be visible to other users</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerTitle">Title *</label>
+                        <input type="text" id="playerTitle" name="playerTitle" required maxlength="15" placeholder="Enter within 15 characters">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="playerNickname">Nickname *</label>
+                            <input type="text" id="playerNickname" name="playerNickname" required placeholder="e.g., Billiard Taro">
+                        </div>
+                        <div class="form-group">
+                            <label for="playerCount">Number of People Seeking to Join *</label>
+                            <select id="playerCount" name="playerCount" required>
+                                <option value="">Please select</option>
+                                <option value="1">1 person</option>
+                                <option value="2">2 people</option>
+                                <option value="3">3 people</option>
+                                <option value="other">Other (specify)</option>
+                            </select>
+                            <div id="playerCountOther" class="form-group" style="display: none;">
+                                <input type="text" id="playerCountOtherText" name="playerCountOtherText" placeholder="Please specify">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerGender">Gender</label>
+                        <select id="playerGender" name="playerGender">
+                            <option value="">Please select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerAge">Age</label>
+                        <select id="playerAge" name="playerAge">
+                            <option value="">Please select</option>
+                            <option value="teens">Teens</option>
+                            <option value="20s">20s</option>
+                            <option value="30s">30s</option>
+                            <option value="40s">40s</option>
+                            <option value="50s">50s</option>
+                            <option value="60plus">60+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerLocation">Activity Area (More specific areas make it easier to find) *</label>
+                        <select id="playerLocation" name="playerLocation" required>
+                            <option value="">Please select</option>
+                            <option value="hokkaido">Hokkaido</option>
+                            <option value="tohoku">Tohoku</option>
+                            <option value="kanto">Kanto</option>
+                            <option value="capital">Capital Region</option>
+                            <option value="tokai">Tokai</option>
+                            <option value="hokuriku">Hokuriku</option>
+                            <option value="kansai">Kansai</option>
+                            <option value="chugoku">Chugoku</option>
+                            <option value="shikoku">Shikoku</option>
+                            <option value="kyushu">Kyushu</option>
+                            <option value="okinawa">Okinawa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerExperience">Billiard Experience *</label>
+                        <textarea id="playerExperience" name="playerExperience" rows="3" required placeholder="Please describe your billiard experience"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="jpaHistory">JPA Participation History *</label>
+                        <select id="jpaHistory" name="jpaHistory" required>
+                            <option value="">Please select</option>
+                            <option value="none">None</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                        <div id="jpaHistoryYes" class="form-group" style="display: none;">
+                            <input type="text" id="jpaHistoryText" name="jpaHistoryText" placeholder="Please specify the duration">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerLevel">Skill Level *</label>
+                        <select id="playerLevel" name="playerLevel" required>
+                            <option value="">Please select</option>
+                            <option value="1">1 (Female Beginner)</option>
+                            <option value="2">2 (Beginner)</option>
+                            <option value="3">3 (Class C)</option>
+                            <option value="4">4 (Class C+)</option>
+                            <option value="5">5 (Class B-)</option>
+                            <option value="6">6 (Class B)</option>
+                            <option value="7">7 (Class B+)</option>
+                            <option value="8">8 (Class A)</option>
+                            <option value="9">9 (Class A+)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerGameType">Preferred Game Type *</label>
+                        <select id="playerGameType" name="playerGameType" required>
+                            <option value="">Please select</option>
+                            <option value="8ball">8-Ball</option>
+                            <option value="9ball">9-Ball</option>
+                            <option value="both">Either</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerFrequency">Available Participation Frequency *</label>
+                        <select id="playerFrequency" name="playerFrequency" required>
+                            <option value="">Please select</option>
+                            <option value="more-than-twice-weekly">More than twice a week</option>
+                            <option value="twice-weekly">Twice a week</option>
+                            <option value="1-per-week">Once a week</option>
+                            <option value="biweekly">Once every two weeks</option>
+                            <option value="monthly">1-2 times a month</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerAvailability">Available Days</label>
+                        <select id="playerAvailability" name="playerAvailability">
+                            <option value="">Please select</option>
+                            <option value="weekday">Weekdays</option>
+                            <option value="weekend">Weekends/Holidays</option>
+                            <option value="anytime">Anytime</option>
+                            <option value="other">Other (specify)</option>
+                        </select>
+                        <div id="playerAvailabilityOther" class="form-group" style="display: none;">
+                            <input type="text" id="playerAvailabilityOtherText" name="playerAvailabilityOtherText" placeholder="Please specify">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerSelfIntro">Self Introduction</label>
+                        <textarea id="playerSelfIntro" name="playerSelfIntro" rows="3" maxlength="100" placeholder="Enter self-introduction within 100 characters"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="playerPin">Delete PIN (4 digits) *</label>
+                        <input type="password" id="playerPin" name="playerPin" pattern="[0-9]{4}" maxlength="4" required placeholder="e.g., 1234">
+                        <small class="form-help">Required when deleting posts. Please make a note of it.</small>
+                    </div>
+                    <input type="hidden" name="postType" value="player-seeking">
+                    <button type="submit" class="btn btn-secondary">Post</button>
+                </form>
+            </section>
+
+            <!-- Create Division Form -->
+            <section id="divisionCreateForm" class="post-form-section division-form" style="display: none;">
+                <h2>🏢 Create Division</h2>
+                <p class="form-note">* Required fields</p>
+                <form id="divisionCreateFormElement" class="post-form">
+                    <!-- Private Information -->
+                    <div class="form-section-header">
+                        <h3>Private Information</h3>
+                        <p>This information will be kept private</p>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="divisionCaptainName">Your Name (Private) *</label>
+                            <input type="text" id="divisionCaptainName" name="authorName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="divisionCaptainEmail">Email Address (Private) *</label>
+                            <input type="email" id="divisionCaptainEmail" name="authorEmail" required placeholder="Email address to receive contact notifications">
+                        </div>
+                    </div>
+                    
+                    <!-- Public Information -->
+                    <div class="form-section-header">
+                        <h3>Public Information</h3>
+                        <p>This information will be visible to other users</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionTitle">Title *</label>
+                        <input type="text" id="divisionTitle" name="divisionTitle" required maxlength="15" placeholder="Enter within 15 characters">
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionNickname">Nickname *</label>
+                        <input type="text" id="divisionNickname" name="divisionNickname" required placeholder="e.g., Division Leader">
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionLocation">Activity Area (More specific areas make it easier to find) *</label>
+                        <select id="divisionLocation" name="divisionLocation" required>
+                            <option value="">Please select</option>
+                            <option value="hokkaido">Hokkaido</option>
+                            <option value="tohoku">Tohoku</option>
+                            <option value="kanto">Kanto</option>
+                            <option value="capital">Capital Region</option>
+                            <option value="tokai">Tokai</option>
+                            <option value="hokuriku">Hokuriku</option>
+                            <option value="kansai">Kansai</option>
+                            <option value="chugoku">Chugoku</option>
+                            <option value="shikoku">Shikoku</option>
+                            <option value="kyushu">Kyushu</option>
+                            <option value="okinawa">Okinawa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionShop">Main Activity Shop</label>
+                        <input type="text" id="divisionShop" name="divisionShop" placeholder="e.g., Billiard Oops!">
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionTeams">Number of Teams to Recruit *</label>
+                        <select id="divisionTeams" name="divisionTeams" required>
+                            <option value="">Please select</option>
+                            <option value="1">1 team</option>
+                            <option value="2">2 teams</option>
+                            <option value="3">3 teams</option>
+                            <option value="other">Other (specify)</option>
+                        </select>
+                        <div id="divisionTeamsOther" class="form-group" style="display: none;">
+                            <input type="text" id="divisionTeamsOtherText" name="divisionTeamsOtherText" placeholder="Please specify">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionGameType">Preferred Game Type *</label>
+                        <select id="divisionGameType" name="divisionGameType" required>
+                            <option value="">Please select</option>
+                            <option value="8ball">8-Ball</option>
+                            <option value="9ball">9-Ball</option>
+                            <option value="both">Either</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionDay">Activity Days</label>
+                        <select id="divisionDay" name="divisionDay">
+                            <option value="">Please select</option>
+                            <option value="weekday">Weekdays</option>
+                            <option value="weekend">Weekends/Holidays</option>
+                            <option value="decide">To be decided</option>
+                            <option value="other">Other (specify)</option>
+                        </select>
+                        <div id="divisionDayOther" class="form-group" style="display: none;">
+                            <input type="text" id="divisionDayOtherText" name="divisionDayOtherText" placeholder="Please specify">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="divisionPin">Delete PIN (4 digits) *</label>
+                        <input type="password" id="divisionPin" name="divisionPin" pattern="[0-9]{4}" maxlength="4" required placeholder="e.g., 1234">
+                        <small class="form-help">Required when deleting posts. Please make a note of it.</small>
+                    </div>
+                    <input type="hidden" name="postType" value="division-create">
+                    <button type="submit" class="btn btn-tertiary">Post</button>
+                </form>
+            </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Contact Poster</h2>
+            <form id="contactForm" class="contact-form">
+                <input type="hidden" id="postId" name="postId">
+                <input type="hidden" id="postTitle" name="postTitle">
+                <input type="hidden" id="postType" name="postType">
+                <div class="form-group">
+                    <label for="senderName">Your Name *</label>
+                    <input type="text" id="senderName" name="senderName" required>
+                </div>
+                <div class="form-group">
+                    <label for="senderEmail">Your Email *</label>
+                    <input type="email" id="senderEmail" name="senderEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message *</label>
+                    <textarea id="message" name="message" rows="4" required placeholder="Write your message to the poster..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Email</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Post Detail Modal -->
+    <div id="postDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="postDetail" class="post-detail">
+                <!-- Post details will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Delete Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Delete Post</h2>
+            <p>To delete this post, please enter the 4-digit PIN you set when posting.</p>
+            <form id="deleteForm">
+                <div class="form-group">
+                    <label for="deletePin">Delete PIN (4 digits) *</label>
+                    <input type="password" id="deletePin" name="deletePin" pattern="[0-9]{4}" maxlength="4" required placeholder="e.g., 1234">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelDelete">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 JPAMatch. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="./script-en.js"></script>
+</body>
+</html>
