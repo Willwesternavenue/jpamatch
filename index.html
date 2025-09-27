@@ -67,23 +67,28 @@
                 <h2>🏆 チームメイト募集中！</h2>
                 <p class="form-note">※印は必須項目です</p>
                 <form id="teamRecruitFormElement" class="post-form">
-                    <div class="form-section">
-                        <h3>非公開情報（連絡用）</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="teamCaptainName">お名前 *</label>
-                                <input type="text" id="teamCaptainName" name="authorName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="teamCaptainEmail">メールアドレス *</label>
-                                <input type="email" id="teamCaptainEmail" name="authorEmail" required>
-                            </div>
+                    <!-- 非公開情報 -->
+                    <div class="form-section-header">
+                        <h3>非公開情報</h3>
+                        <p>こちらは非公開で管理されます</p>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="teamCaptainName">お名前（非公開） *</label>
+                            <input type="text" id="teamCaptainName" name="authorName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamCaptainEmail">メールアドレス（非公開） *</label>
+                            <input type="email" id="teamCaptainEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
                         </div>
                     </div>
                     
-                    <div class="form-section">
+                    <!-- 公開情報 -->
+                    <div class="form-section-header">
                         <h3>公開情報</h3>
-                        <div class="form-row">
+                        <p>こちらは他のユーザーに公開されます</p>
+                    </div>
+                    <div class="form-row">
                             <div class="form-group">
                                 <label for="teamNickname">チーム名・ニックネーム *</label>
                                 <input type="text" id="teamNickname" name="teamNickname" required placeholder="例：ビリヤードクラブ エース">
