@@ -202,13 +202,7 @@
                         
                     </div>
                     
-                    <div class="form-group">
-                        <label for="teamPin">削除用PIN（4桁の数字） *</label>
-                        <input type="password" id="teamPin" name="teamPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
-                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
-                    </div>
                     <input type="hidden" name="postType" value="team-recruit">
-                    <button type="submit" class="btn btn-primary">投稿する</button>
                 </form>
             </section>
 
@@ -366,13 +360,7 @@
                         <textarea id="playerSelfIntro" name="playerSelfIntro" rows="3" maxlength="100" placeholder="100文字以内で自己紹介を入力してください"></textarea>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="playerPin">削除用PIN（4桁の数字） *</label>
-                        <input type="password" id="playerPin" name="playerPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
-                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
-                    </div>
                     <input type="hidden" name="postType" value="player-seeking">
-                    <button type="submit" class="btn btn-secondary">投稿する</button>
                 </form>
             </section>
 
@@ -467,13 +455,7 @@
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="divisionPin">削除用PIN（4桁の数字） *</label>
-                        <input type="password" id="divisionPin" name="divisionPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
-                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
-                    </div>
                     <input type="hidden" name="postType" value="division-create">
-                    <button type="submit" class="btn btn-tertiary">投稿する</button>
                 </form>
             </section>
             </div>
@@ -516,6 +498,24 @@
         </div>
     </div>
 
+    <!-- PIN削除モーダル -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>投稿を削除</h2>
+            <p>この投稿を削除するには、投稿時に設定した4桁のPINを入力してください。</p>
+            <form id="deleteForm">
+                <div class="form-group">
+                    <label for="deletePin">削除用PIN（4桁の数字） *</label>
+                    <input type="password" id="deletePin" name="deletePin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelDelete">キャンセル</button>
+                    <button type="submit" class="btn btn-danger">削除する</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="container">
