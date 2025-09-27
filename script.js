@@ -731,8 +731,8 @@ async function handleTeamRecruitSubmit(event) {
         (teamLocationDetail ? ` (${teamLocationDetail})` : '');
     
     const postData = {
-        title: `チームメイト募集中`,
-        content: formData.get('teamContent'),
+        title: formData.get('teamTitle') || 'チームメイト募集中',
+        content: 'チームメイトを募集しています。',
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'team-recruit',
@@ -791,8 +791,8 @@ async function handlePlayerSeekingSubmit(event) {
     const playerFrequency = formData.get('playerFrequency');
     
     const postData = {
-        title: `チームを探しています`,
-        content: formData.get('playerContent'),
+        title: formData.get('playerTitle') || 'チームを探しています',
+        content: 'チーム加入を希望しています。',
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'player-seeking',
@@ -834,8 +834,8 @@ async function handleDivisionCreateSubmit(event) {
     }
     
     const postData = {
-        title: `ディビジョンを創りたい！`,
-        content: formData.get('divisionContent'),
+        title: formData.get('divisionTitle') || 'ディビジョンを創りたい！',
+        content: '新しいディビジョンの創設を希望しています。',
         author_name: formData.get('authorName'),
         author_email: formData.get('authorEmail'),
         post_type: 'division-create',
