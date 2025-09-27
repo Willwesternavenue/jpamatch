@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "ビリヤードチーム仲間探し掲示板 - メール連絡機能付き",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
