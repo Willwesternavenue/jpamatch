@@ -750,7 +750,7 @@ async function handleTeamRecruitSubmit(event) {
         team_self_intro: formData.get('teamSelfIntro')
     };
     
-    await submitPost(postData, 'チーム募集が正常に投稿されました！');
+    await submitPost(postData, '正常に投稿されました');
 }
 
 // チーム加入希望フォームの送信
@@ -815,7 +815,7 @@ async function handlePlayerSeekingSubmit(event) {
         player_self_intro: formData.get('playerSelfIntro')
     };
     
-    await submitPost(postData, 'チーム加入希望が正常に投稿されました！');
+    await submitPost(postData, '正常に投稿されました');
 }
 
 // ディビジョン作成フォームの送信
@@ -851,7 +851,7 @@ async function handleDivisionCreateSubmit(event) {
         division_day: divisionDay
     };
     
-    await submitPost(postData, 'ディビジョン作成希望が正常に投稿されました！');
+    await submitPost(postData, '正常に投稿されました');
 }
 
 // 投稿の送信（共通処理）

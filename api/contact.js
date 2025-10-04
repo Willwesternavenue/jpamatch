@@ -45,9 +45,9 @@ export default async function handler(req, res) {
     // 投稿タイプに応じたメール件名
     let subject;
     if (postType === 'team-recruit') {
-      subject = `【ビリヤードチーム募集】「${postTitle}」への加入希望`;
+      subject = `【ビリヤードチームメイト募集中！】「${postTitle}」への加入希望`;
     } else if (postType === 'player-seeking') {
-      subject = `【ビリヤードチーム加入希望】「${postTitle}」へのチーム募集`;
+      subject = `【ビリヤードチームを探しています】「${postTitle}」へのチーム募集`;
     } else {
       subject = `【ビリヤード仲間探し】投稿「${postTitle}」への連絡`;
     }
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
       html: `
         <h2>JPAMatch ビリヤード仲間探し掲示板からの連絡</h2>
         <p><strong>投稿タイトル:</strong> ${postTitle}</p>
-        <p><strong>投稿タイプ:</strong> ${postType === 'team-recruit' ? 'チーム募集' : postType === 'player-seeking' ? 'チーム加入希望' : '一般投稿'}</p>
+        <p><strong>投稿タイプ:</strong> ${postType === 'team-recruit' ? 'チームメイト募集中！' : postType === 'player-seeking' ? 'チームを探しています' : '一般投稿'}</p>
         <p><strong>連絡者:</strong> ${senderName} (${senderEmail})</p>
         <p><strong>メッセージ:</strong></p>
         <p>${message}</p>

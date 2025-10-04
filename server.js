@@ -79,6 +79,7 @@ app.post('/api/posts', async (req, res) => {
     } = req.body;
     
     console.log('Received player_location_detail:', player_location_detail);
+    console.log('Full request body:', JSON.stringify(req.body, null, 2));
     
     // Filter empty strings for ENUMs and optional fields
     const filteredPlayerGender = player_gender && player_gender !== '' ? player_gender : null;
@@ -92,19 +93,24 @@ app.post('/api/posts', async (req, res) => {
     const filteredTeamFrequency = team_frequency && team_frequency !== '' ? team_frequency : null;
     const filteredDivisionGameType = division_game_type && division_game_type !== '' ? division_game_type : null;
 
+    const insertData = {
+      title, content, author_email, author_name, post_type, delete_pin,
+      nickname, needed_players, team_location, team_location_detail, team_jpa_history: filteredTeamJpaHistory, team_skill_level: filteredTeamSkillLevel, team_game_type: filteredTeamGameType, team_frequency: filteredTeamFrequency, team_availability, team_self_intro,
+      player_count, player_gender: filteredPlayerGender, player_age: filteredPlayerAge, player_location, player_location_detail, player_experience, jpa_history, jpa_history_text, player_level: filteredPlayerLevel, player_game_type: filteredPlayerGameType, player_frequency: filteredPlayerFrequency, player_availability, player_self_intro,
+      division_location, division_shop, division_teams, division_game_type: filteredDivisionGameType, division_day
+    };
+    
+    console.log('Inserting data:', JSON.stringify(insertData, null, 2));
+    
     const { data: postData, error: postError } = await supabase
       .from('posts')
-      .insert([
-        {
-          title, content, author_email, author_name, post_type, delete_pin,
-          nickname, needed_players, team_location, team_location_detail, team_jpa_history: filteredTeamJpaHistory, team_skill_level: filteredTeamSkillLevel, team_game_type: filteredTeamGameType, team_frequency: filteredTeamFrequency, team_availability, team_self_intro,
-          player_count, player_gender: filteredPlayerGender, player_age: filteredPlayerAge, player_location, player_location_detail, player_experience, jpa_history, jpa_history_text, player_level: filteredPlayerLevel, player_game_type: filteredPlayerGameType, player_frequency: filteredPlayerFrequency, player_availability, player_self_intro,
-          division_location, division_shop, division_teams, division_game_type: filteredDivisionGameType, division_day
-        }
-      ])
+      .insert([insertData])
       .select();
     
-    if (postError) throw postError;
+    if (postError) {
+      console.error('Database insert error:', postError);
+      throw postError;
+    }
     
     const postId = postData[0].id;
     
