@@ -79,6 +79,7 @@ app.post('/api/posts', async (req, res) => {
     } = req.body;
     
     console.log('Received player_location_detail:', player_location_detail);
+    console.log('Received team_location_detail:', team_location_detail);
     console.log('Full request body:', JSON.stringify(req.body, null, 2));
     
     // Filter empty strings for ENUMs and optional fields
@@ -101,6 +102,10 @@ app.post('/api/posts', async (req, res) => {
     };
     
     console.log('Inserting data:', JSON.stringify(insertData, null, 2));
+    console.log('About to insert player_location_detail:', insertData.player_location_detail);
+    console.log('About to insert team_location_detail:', insertData.team_location_detail);
+    
+    console.log('About to insert to database...');
     
     const { data: postData, error: postError } = await supabase
       .from('posts')
@@ -111,6 +116,9 @@ app.post('/api/posts', async (req, res) => {
       console.error('Database insert error:', postError);
       throw postError;
     }
+    
+    console.log('Successfully inserted post:', JSON.stringify(postData[0], null, 2));
+    console.log('Inserted player_location_detail:', postData[0].player_location_detail);
     
     const postId = postData[0].id;
     
