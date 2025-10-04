@@ -210,17 +210,33 @@ app.post('/api/contact', async (req, res) => {
     
     // 連絡履歴を保存
     console.log('連絡履歴保存開始');
-    const { error: logError } = await supabase
+    console.log('保存するデータ:', {
+      post_id: postId,
+      sender_name: senderName,
+      sender_email: senderEmail,
+      message: message
+    });
+    
+    const { data: logData, error: logError } = await supabase
       .from('contact_logs')
       .insert([{
         post_id: postId,
         sender_name: senderName,
         sender_email: senderEmail,
         message: message
-      }]);
+      }])
+      .select();
     
-    console.log('連絡履歴保存結果:', { logError });
-    if (logError) throw logError;
+    console.log('連絡履歴保存結果:', { logData, logError });
+    if (logError) {
+      console.error('連絡履歴保存エラー詳細:', {
+        message: logError.message,
+        details: logError.details,
+        hint: logError.hint,
+        code: logError.code
+      });
+      throw logError;
+    }
     
     // メール送信
     console.log('メール送信開始');
@@ -244,8 +260,13 @@ app.post('/api/contact', async (req, res) => {
     
     console.log('メールオプション:', mailOptions);
     
-    const mailResult = await transporter.sendMail(mailOptions);
-    console.log('メール送信結果:', mailResult);
+    try {
+      const mailResult = await transporter.sendMail(mailOptions);
+      console.log('投稿者へのメール送信結果:', mailResult);
+    } catch (mailError) {
+      console.error('投稿者へのメール送信エラー:', mailError);
+      throw new Error(`投稿者へのメール送信に失敗しました: ${mailError.message}`);
+    }
     
     // 連絡者への確認メール送信
     console.log('連絡者への確認メール送信開始');
@@ -268,8 +289,14 @@ app.post('/api/contact', async (req, res) => {
     
     console.log('確認メールオプション:', confirmationMailOptions);
     
-    const confirmationResult = await transporter.sendMail(confirmationMailOptions);
-    console.log('確認メール送信結果:', confirmationResult);
+    try {
+      const confirmationResult = await transporter.sendMail(confirmationMailOptions);
+      console.log('確認メール送信結果:', confirmationResult);
+    } catch (confirmationError) {
+      console.error('確認メール送信エラー:', confirmationError);
+      // 確認メールの送信失敗は致命的ではないので、エラーを投げない
+      console.log('確認メールの送信に失敗しましたが、投稿者へのメールは送信済みです');
+    }
     
     res.json({ success: true, message: '連絡が送信されました' });
   } catch (error) {
