@@ -791,6 +791,7 @@ async function handlePlayerSeekingSubmit(event) {
     const playerLevel = formData.get('playerLevel');
     const playerGameType = formData.get('playerGameType');
     const playerFrequency = formData.get('playerFrequency');
+    const playerLocationDetail = formData.get('playerLocationDetail');
     
     const postData = {
         title: `チームを探しています`,
@@ -804,7 +805,7 @@ async function handlePlayerSeekingSubmit(event) {
         player_gender: playerGender && playerGender !== '' ? playerGender : null,
         player_age: playerAge && playerAge !== '' ? playerAge : null,
         player_location: formData.get('playerLocation'),
-        player_location_detail: formData.get('playerLocationDetail'),
+        player_location_detail: playerLocationDetail,
         player_experience: formData.get('playerExperience'),
         jpa_history: jpaHistory,
         jpa_history_text: jpaHistoryText,
