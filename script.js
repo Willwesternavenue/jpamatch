@@ -889,6 +889,7 @@ async function submitPost(postData, successMessage) {
 // 連絡フォームの送信
 async function handleContactSubmit(event) {
     event.preventDefault();
+    console.log('連絡フォーム送信開始');
     
     const formData = new FormData(contactForm);
     const contactData = {
@@ -900,6 +901,9 @@ async function handleContactSubmit(event) {
         message: formData.get('message')
     };
     
+    console.log('送信データ:', contactData);
+    console.log('API URL:', `${API_BASE_URL}/api/contact`);
+    
     try {
         const response = await fetch(`${API_BASE_URL}/api/contact`, {
             method: 'POST',
@@ -909,12 +913,18 @@ async function handleContactSubmit(event) {
             body: JSON.stringify(contactData)
         });
         
+        console.log('レスポンスステータス:', response.status);
+        console.log('レスポンスOK:', response.ok);
+        
         if (response.ok) {
+            const result = await response.json();
+            console.log('送信成功:', result);
             showMessage('メールが正常に送信されました！', 'success');
             contactForm.reset();
             contactModal.style.display = 'none';
         } else {
             const error = await response.json();
+            console.log('送信エラー:', error);
             showMessage(`メール送信に失敗しました: ${error.error}`, 'error');
         }
     } catch (error) {

@@ -186,7 +186,10 @@ app.delete('/api/posts/:id', async (req, res) => {
 // 連絡フォーム送信
 app.post('/api/contact', async (req, res) => {
   try {
+    console.log('連絡フォーム送信リクエスト受信:', req.body);
     const { postId, senderName, senderEmail, message } = req.body;
+    
+    console.log('連絡データ:', { postId, senderName, senderEmail, message });
     
     // 投稿情報を取得
     const { data: post, error: postError } = await supabase
@@ -195,9 +198,12 @@ app.post('/api/contact', async (req, res) => {
       .eq('id', postId)
       .single();
     
+    console.log('投稿情報取得結果:', { post, postError });
+    
     if (postError) throw postError;
     
     // 連絡履歴を保存
+    console.log('連絡履歴保存開始');
     const { error: logError } = await supabase
       .from('contact_logs')
       .insert([{
@@ -207,9 +213,14 @@ app.post('/api/contact', async (req, res) => {
         message: message
       }]);
     
+    console.log('連絡履歴保存結果:', { logError });
     if (logError) throw logError;
     
     // メール送信
+    console.log('メール送信開始');
+    console.log('送信先メールアドレス:', post.author_email);
+    console.log('送信者メールアドレス:', process.env.EMAIL_USER);
+    
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: post.author_email,
@@ -225,7 +236,10 @@ app.post('/api/contact', async (req, res) => {
       `
     };
     
-    await transporter.sendMail(mailOptions);
+    console.log('メールオプション:', mailOptions);
+    
+    const mailResult = await transporter.sendMail(mailOptions);
+    console.log('メール送信結果:', mailResult);
     
     res.json({ success: true, message: '連絡が送信されました' });
   } catch (error) {

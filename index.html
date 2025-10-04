@@ -75,10 +75,9 @@
                     <div class="form-section-header">
                         <h3>非公開情報</h3>
                         <p>こちらは非公開で管理されます</p>
-
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="teamCaptainName">お名前 *</label>
+                                <label for="teamCaptainName">お名前*</label>
                                 <input type="text" id="teamCaptainName" name="authorName" required>
                             </div>
                             <div class="form-group">
@@ -90,6 +89,10 @@
                     
                     <div class="form-section">
                         <h3>公開情報</h3>
+                        <div class="form-group">
+                            <label for="teamContent">タイトル *</label>
+                            <textarea id="teamContent" name="teamContent" rows="4" required placeholder="チームの詳細や募集内容を記入してください"></textarea>
+                        </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="teamNickname">チーム名・ニックネーム</label>
@@ -197,11 +200,6 @@
                             <label for="teamSelfIntro">自己紹介</label>
                             <textarea id="teamSelfIntro" name="teamSelfIntro" rows="3" maxlength="100" placeholder="100文字以内で自己紹介を入力してください"></textarea>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="teamContent">投稿内容 *</label>
-                            <textarea id="teamContent" name="teamContent" rows="4" required placeholder="チームの詳細や募集内容を記入してください"></textarea>
-                        </div>
                     </div>
                     
                     <div class="form-group">
@@ -225,11 +223,11 @@
                         <p>こちらは非公開で管理されます</p>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="playerName">お名前（非公開） *</label>
+                                <label for="playerName">お名前*</label>
                                 <input type="text" id="playerName" name="authorName" required>
                             </div>
                             <div class="form-group">
-                                <label for="playerEmail">メールアドレス（非公開） *</label>
+                                <label for="playerEmail">メールアドレス*</label>
                                 <input type="email" id="playerEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
                             </div>
                         </div>
@@ -239,6 +237,10 @@
                     <div class="form-section-header">
                         <h3>公開情報</h3>
                         <p>こちらは他のユーザーに公開されます</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerContent">タイトル *</label>
+                        <textarea id="playerContent" name="playerContent" rows="4" required placeholder="チーム加入希望の詳細を記入してください"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="playerNickname">ニックネーム *</label>
@@ -365,11 +367,6 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="playerContent">投稿内容 *</label>
-                        <textarea id="playerContent" name="playerContent" rows="4" required placeholder="チーム加入希望の詳細を記入してください"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
                         <label for="playerPin">削除用PIN（4桁の半角数字） *</label>
                         <input type="password" id="playerPin" name="playerPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
                         <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
@@ -390,11 +387,11 @@
                         <p>こちらは非公開で管理されます</p>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="divisionName">お名前（非公開） *</label>
+                                <label for="divisionName">お名前*</label>
                                 <input type="text" id="divisionName" name="authorName" required>
                             </div>
                             <div class="form-group">
-                                <label for="divisionEmail">メールアドレス（非公開） *</label>
+                                <label for="divisionEmail">メールアドレス*</label>
                                 <input type="email" id="divisionEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
                             </div>
                         </div>
@@ -404,6 +401,10 @@
                     <div class="form-section-header">
                         <h3>公開情報</h3>
                         <p>こちらは他のユーザーに公開されます</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionContent">タイトル *</label>
+                        <textarea id="divisionContent" name="divisionContent" rows="4" required placeholder="ディビジョン創設の詳細を記入してください"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="divisionNickname">ニックネーム（任意）</label>
@@ -464,11 +465,6 @@
                         <div id="divisionDayOther" class="form-group" style="display: none;">
                             <input type="text" id="divisionDayOtherText" name="divisionDayOtherText" placeholder="詳細を入力してください">
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="divisionContent">投稿内容 *</label>
-                        <textarea id="divisionContent" name="divisionContent" rows="4" required placeholder="ディビジョン創設の詳細を記入してください"></textarea>
                     </div>
                     
                     <div class="form-group">
