@@ -383,7 +383,7 @@ function createPostDetails(post) {
                     ${post.player_count ? `<div class="post-detail-item"><span class="post-detail-label">People Seeking to Join:</span> ${escapeHtml(post.player_count)}</div>` : ''}
                     ${post.player_gender ? `<div class="post-detail-item"><span class="post-detail-label">Gender:</span> ${getGenderText(post.player_gender)}</div>` : ''}
                     ${post.player_age ? `<div class="post-detail-item"><span class="post-detail-label">Age:</span> ${getAgeText(post.player_age)}</div>` : ''}
-                    ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">Activity Area:</span> ${getLocationText(post.player_location)}</div>` : ''}
+                    ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">Activity Area:</span> ${getLocationText(post.player_location)}${post.player_location_detail ? ` (${escapeHtml(post.player_location_detail)})` : ''}</div>` : ''}
                     ${post.player_level ? `<div class="post-detail-item"><span class="post-detail-label">Skill Level:</span> ${getSkillLevelText(post.player_level)}</div>` : ''}
                     ${post.player_game_type ? `<div class="post-detail-item"><span class="post-detail-label">Preferred Game Type:</span> ${getGameTypeText(post.player_game_type)}</div>` : ''}
                     ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">Available Participation Frequency:</span> ${getFrequencyTextNew(post.player_frequency)}</div>` : ''}
@@ -626,9 +626,11 @@ async function handlePlayerSeekingSubmit(event) {
     }
     
     const playerGender = formData.get('playerGender');
+    const playerAge = formData.get('playerAge');
     const playerLevel = formData.get('playerLevel');
     const playerGameType = formData.get('playerGameType');
     const playerFrequency = formData.get('playerFrequency');
+    const playerLocationDetail = formData.get('playerLocationDetail');
     
     let playerAvailability = formData.get('playerAvailability');
     if (playerAvailability === 'other') {
@@ -647,6 +649,7 @@ async function handlePlayerSeekingSubmit(event) {
         player_gender: playerGender && playerGender !== '' ? playerGender : null,
         player_age: playerAge && playerAge !== '' ? playerAge : null,
         player_location: formData.get('playerLocation'),
+        player_location_detail: playerLocationDetail,
         player_experience: formData.get('playerExperience'),
         jpa_history: formData.get('jpaHistory'),
         jpa_history_text: formData.get('jpaHistoryText'),
