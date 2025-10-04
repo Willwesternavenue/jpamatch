@@ -924,7 +924,7 @@ async function handleContactSubmit(event) {
             const result = await response.json();
             console.log('送信成功:', result);
             console.log('成功メッセージを表示します');
-            showMessage('メールが正常に送信されました！', 'success');
+            showMessage('✅ メールが正常に送信されました！投稿者に連絡メールが送信され、確認メールがあなたに送信されました。', 'success');
             console.log('フォームをリセットします');
             contactForm.reset();
             console.log('モーダルを閉じます');
@@ -1033,27 +1033,37 @@ function showMessage(message, type = 'success') {
     messageDiv.textContent = message;
     console.log('メッセージ要素を作成:', messageDiv);
     
-    // 投稿タイプ選択セクションの上に表示
-    const postTypeSection = document.querySelector('.post-type-section');
-    console.log('投稿タイプセクション:', postTypeSection);
+    // 固定位置で表示するためのスタイルを追加
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10000;
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        ${type === 'success' ? 
+            'background: #27ae60; color: white;' : 
+            'background: #e74c3c; color: white;'
+        }
+    `;
     
-    if (postTypeSection && postTypeSection.parentNode) {
-        postTypeSection.parentNode.insertBefore(messageDiv, postTypeSection);
-        console.log('メッセージを挿入しました');
-    } else {
-        console.error('投稿タイプセクションまたはその親要素が見つかりません');
-        // フォールバック: bodyの先頭に追加
-        document.body.insertBefore(messageDiv, document.body.firstChild);
-        console.log('フォールバック: bodyの先頭にメッセージを追加しました');
-    }
+    // bodyに直接追加
+    document.body.appendChild(messageDiv);
+    console.log('メッセージをbodyに追加しました');
     
-    // 3秒後に自動削除
+    // 5秒後に自動削除
     setTimeout(() => {
         if (messageDiv.parentNode) {
             messageDiv.remove();
             console.log('メッセージを自動削除しました');
         }
-    }, 3000);
+    }, 5000);
 }
 
 // HTMLエスケープ
