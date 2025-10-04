@@ -191,6 +191,9 @@ app.delete('/api/posts/:id', async (req, res) => {
 
 // 連絡フォーム送信
 app.post('/api/contact', async (req, res) => {
+    console.log('=== /api/contact エンドポイントが呼び出されました ===');
+    console.log('リクエストボディ:', req.body);
+    console.log('リクエストヘッダー:', req.headers);
   try {
     console.log('=== 連絡フォーム送信開始 ===');
     console.log('環境情報:', {
