@@ -1015,24 +1015,41 @@ async function deletePost(postId, pin) {
 
 // メッセージの表示
 function showMessage(message, type = 'success') {
+    console.log('=== showMessage関数が呼び出されました ===');
+    console.log('メッセージ:', message);
+    console.log('タイプ:', type);
+    
     // 既存のメッセージを削除
     const existingMessage = document.querySelector('.message');
     if (existingMessage) {
+        console.log('既存のメッセージを削除します');
         existingMessage.remove();
     }
     
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}`;
     messageDiv.textContent = message;
+    console.log('メッセージ要素を作成:', messageDiv);
     
     // 投稿タイプ選択セクションの上に表示
     const postTypeSection = document.querySelector('.post-type-section');
-    postTypeSection.parentNode.insertBefore(messageDiv, postTypeSection);
+    console.log('投稿タイプセクション:', postTypeSection);
+    
+    if (postTypeSection && postTypeSection.parentNode) {
+        postTypeSection.parentNode.insertBefore(messageDiv, postTypeSection);
+        console.log('メッセージを挿入しました');
+    } else {
+        console.error('投稿タイプセクションまたはその親要素が見つかりません');
+        // フォールバック: bodyの先頭に追加
+        document.body.insertBefore(messageDiv, document.body.firstChild);
+        console.log('フォールバック: bodyの先頭にメッセージを追加しました');
+    }
     
     // 3秒後に自動削除
     setTimeout(() => {
         if (messageDiv.parentNode) {
             messageDiv.remove();
+            console.log('メッセージを自動削除しました');
         }
     }, 3000);
 }
