@@ -781,7 +781,8 @@ async function handlePlayerSeekingSubmit(event) {
     console.log('Player seeking form data:', {
         playerNickname: formData.get('playerNickname'),
         authorName: formData.get('authorName'),
-        authorEmail: formData.get('authorEmail')
+        authorEmail: formData.get('authorEmail'),
+        playerLocationDetail: formData.get('playerLocationDetail')
     });
     
     // 空の値をフィルタリング

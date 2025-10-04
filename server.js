@@ -78,6 +78,8 @@ app.post('/api/posts', async (req, res) => {
       division_location, division_shop, division_teams, division_game_type, division_day
     } = req.body;
     
+    console.log('Received player_location_detail:', player_location_detail);
+    
     // Filter empty strings for ENUMs and optional fields
     const filteredPlayerGender = player_gender && player_gender !== '' ? player_gender : null;
     const filteredPlayerAge = player_age && player_age !== '' ? player_age : null;
