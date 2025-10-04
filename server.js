@@ -29,6 +29,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // メール送信設定
+console.log('メール設定確認:', {
+  EMAIL_USER: process.env.EMAIL_USER ? '設定済み' : '未設定',
+  EMAIL_PASS: process.env.EMAIL_PASS ? '設定済み' : '未設定',
+  NODE_ENV: process.env.NODE_ENV
+});
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -244,7 +250,15 @@ app.post('/api/contact', async (req, res) => {
     res.json({ success: true, message: '連絡が送信されました' });
   } catch (error) {
     console.error('連絡送信エラー:', error);
-    res.status(500).json({ error: error.message });
+    console.error('エラーの詳細:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code
+    });
+    res.status(500).json({ 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : 'Internal server error'
+    });
   }
 });
 
