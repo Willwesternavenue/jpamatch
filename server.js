@@ -247,6 +247,30 @@ app.post('/api/contact', async (req, res) => {
     const mailResult = await transporter.sendMail(mailOptions);
     console.log('メール送信結果:', mailResult);
     
+    // 連絡者への確認メール送信
+    console.log('連絡者への確認メール送信開始');
+    const confirmationMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: senderEmail,
+      subject: `JPAMatch - 連絡送信完了: ${post.title}`,
+      html: `
+        <h2>JPAMatch 連絡送信完了</h2>
+        <p>以下の投稿への連絡が正常に送信されました。</p>
+        <h3>投稿情報</h3>
+        <p><strong>タイトル:</strong> ${post.title}</p>
+        <p><strong>投稿者:</strong> ${post.author_name}</p>
+        <h3>送信したメッセージ</h3>
+        <p>${message.replace(/\n/g, '<br>')}</p>
+        <hr>
+        <p><small>このメールは自動送信されています。投稿者からの返信をお待ちください。</small></p>
+      `
+    };
+    
+    console.log('確認メールオプション:', confirmationMailOptions);
+    
+    const confirmationResult = await transporter.sendMail(confirmationMailOptions);
+    console.log('確認メール送信結果:', confirmationResult);
+    
     res.json({ success: true, message: '連絡が送信されました' });
   } catch (error) {
     console.error('連絡送信エラー:', error);
