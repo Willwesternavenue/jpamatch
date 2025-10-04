@@ -1,5 +1,5 @@
 // API設定 - 本番環境では相対パス、開発環境では絶対パスを使用
-const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3001' : '';
+const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
 
 // DOM要素の取得
 const postTypeButtons = document.querySelectorAll('.post-type-btn');
@@ -461,8 +461,8 @@ function createPostDetails(post) {
                     ${post.team_jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${getJpaHistoryText(post.team_jpa_history)}</div>` : ''}
                     ${post.team_skill_level ? `<div class="post-detail-item"><span class="post-detail-label">募集したいスキルレベル:</span> ${getSkillLevelRangeText(post.team_skill_level)}</div>` : ''}
                     ${post.team_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレー種目:</span> ${getGameTypeText(post.team_game_type)}</div>` : ''}
-                    ${post.team_frequency ? `<div class="post-detail-item"><span class="post-detail-label">望む参加頻度:</span> ${getFrequencyTextNew(post.team_frequency)}</div>` : ''}
-                    ${post.team_availability ? `<div class="post-detail-item"><span class="post-detail-label">活動曜日:</span> ${escapeHtml(post.team_availability)}</div>` : ''}
+                    ${post.team_frequency ? `<div class="post-detail-item"><span class="post-detail-label">望む参加頻度:</span> ${getFrequencyText(post.team_frequency)}</div>` : ''}
+                    ${post.team_availability ? `<div class="post-detail-item"><span class="post-detail-label">活動曜日:</span> ${getAvailabilityText(post.team_availability)}</div>` : ''}
                     ${post.team_self_intro ? `<div class="post-detail-item"><span class="post-detail-label">自己紹介:</span> ${escapeHtml(post.team_self_intro)}</div>` : ''}
                 </div>
             </div>
@@ -479,8 +479,8 @@ function createPostDetails(post) {
                     ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">活動可能地域:</span> ${getLocationText(post.player_location)}</div>` : ''}
                     ${post.player_level ? `<div class="post-detail-item"><span class="post-detail-label">スキルレベル:</span> ${getSkillLevelText(post.player_level)}</div>` : ''}
                     ${post.player_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレーしたい種目:</span> ${getGameTypeText(post.player_game_type)}</div>` : ''}
-                    ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">参加可能頻度:</span> ${getFrequencyTextNew(post.player_frequency)}</div>` : ''}
-                    ${post.player_availability ? `<div class="post-detail-item"><span class="post-detail-label">参加可能曜日:</span> ${escapeHtml(post.player_availability)}</div>` : ''}
+                    ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">参加可能頻度:</span> ${getFrequencyText(post.player_frequency)}</div>` : ''}
+                    ${post.player_availability ? `<div class="post-detail-item"><span class="post-detail-label">参加可能曜日:</span> ${getAvailabilityText(post.player_availability)}</div>` : ''}
                     ${post.jpa_history ? `<div class="post-detail-item"><span class="post-detail-label">JPA参加歴:</span> ${post.jpa_history === 'yes' ? 'あり' : 'なし'}${post.jpa_history_text ? ' (' + escapeHtml(post.jpa_history_text) + ')' : ''}</div>` : ''}
                     ${post.player_self_intro ? `<div class="post-detail-item"><span class="post-detail-label">自己紹介:</span> ${escapeHtml(post.player_self_intro)}</div>` : ''}
                 </div>
@@ -517,9 +517,11 @@ function getLevelText(level) {
 // 頻度テキストの取得
 function getFrequencyText(frequency) {
     const frequencyMap = {
-        'weekly': '週1回',
-        'biweekly': '週2回',
-        'monthly': '月1回',
+        'weekly-plus': '週1度以上',
+        'weekly': '週1度',
+        '1-per-week': '週1度',
+        'biweekly': '2週に1度',
+        'monthly': '月に1,2度',
         'flexible': '不定期'
     };
     return frequencyMap[frequency] || frequency;
@@ -540,8 +542,10 @@ function getExperienceText(experience) {
 // 活動可能時間テキストの取得
 function getAvailabilityText(availability) {
     const availabilityMap = {
+        'weekday': '平日',
+        'weekend': '土日祝',
+        'anytime': 'いつでも',
         'weekday-evening': '平日夜',
-        'weekend': '週末',
         'weekday-daytime': '平日昼',
         'flexible': '時間問わず'
     };
@@ -660,7 +664,7 @@ function getDisplayName(post) {
 }
 
 // 投稿詳細の表示
-async function showPostDetail(postId) {
+window.showPostDetail = async function(postId) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`);
         const post = await response.json();
@@ -700,7 +704,7 @@ async function showPostDetail(postId) {
 }
 
 // 連絡モーダルの表示
-function showContactModal(postId, postTitle, postType) {
+window.showContactModal = function(postId, postTitle, postType) {
     document.getElementById('postId').value = postId;
     document.getElementById('postTitle').value = postTitle;
     document.getElementById('postType').value = postType;
@@ -920,10 +924,14 @@ async function handleContactSubmit(event) {
 
 // 投稿の削除
 // PIN削除モーダルを表示
-function showDeleteModal(postId, postTitle) {
+window.showDeleteModal = function(postId, postTitle) {
+    console.log('削除モーダル表示開始:', { postId, postTitle });
+    
     try {
         const deleteModal = document.getElementById('deleteModal');
         const deletePinInput = document.getElementById('deletePin');
+        
+        console.log('削除モーダル要素の確認:', { deleteModal: !!deleteModal, deletePinInput: !!deletePinInput });
         
         if (!deleteModal || !deletePinInput) {
             console.error('削除モーダルの要素が見つかりません');
@@ -971,13 +979,6 @@ async function deletePost(postId, pin) {
         document.getElementById('deleteModal').style.display = 'none';
         
         console.log('削除成功、投稿一覧を再読み込み中...');
-        
-        // 削除された投稿をDOMから直接削除
-        const deletedPostElement = document.querySelector(`[data-post-id="${postId}"]`);
-        if (deletedPostElement) {
-            deletedPostElement.remove();
-            console.log('DOMから投稿を削除しました');
-        }
         
         // 投稿一覧を再読み込み（強制キャッシュクリア）
         console.log('投稿一覧を再読み込み中...');

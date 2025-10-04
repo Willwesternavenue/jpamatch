@@ -28,11 +28,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// 静的ファイルの提供
-app.use(express.static('.', { index: ['index.html'], dotfiles: 'ignore' }));
-
 // メール送信設定
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
@@ -43,6 +40,7 @@ const transporter = nodemailer.createTransporter({
 // 投稿一覧取得
 app.get('/api/posts', async (req, res) => {
   try {
+    console.log('投稿一覧取得リクエスト');
     const { data, error } = await supabase
       .from('posts')
       .select('*')
@@ -50,8 +48,10 @@ app.get('/api/posts', async (req, res) => {
     
     if (error) throw error;
     
+    console.log('投稿一覧取得成功:', data.length, '件');
     res.json(data);
   } catch (error) {
+    console.error('投稿一覧取得エラー:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -158,14 +158,24 @@ app.delete('/api/posts/:id', async (req, res) => {
     }
     
     // 投稿を削除
-    const { error: deleteError } = await supabase
+    const { data: deleteData, error: deleteError } = await supabase
       .from('posts')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .select();
     
     if (deleteError) throw deleteError;
     
-    console.log('削除成功:', deleteError);
+    console.log('削除成功: 投稿ID', id, '削除されたデータ:', deleteData);
+    
+    // 削除確認のため、同じIDで投稿を検索
+    const { data: verifyData, error: verifyError } = await supabase
+      .from('posts')
+      .select('id')
+      .eq('id', id);
+    
+    console.log('削除確認: 投稿ID', id, '残存データ:', verifyData);
+    
     res.json({ success: true, message: '投稿が削除されました' });
   } catch (error) {
     console.error('削除エラー:', error);
@@ -223,6 +233,9 @@ app.post('/api/contact', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// 静的ファイルの提供（APIルートの後に配置）
+app.use(express.static('.', { index: ['index.html'], dotfiles: 'ignore' }));
 
 // サーバー起動
 app.listen(PORT, () => {

@@ -367,34 +367,53 @@ select {
 /* 投稿一覧 */
 .posts-list {
     display: grid;
-    gap: 1.5rem;
+    gap: 2rem;
+    padding: 1rem 0;
 }
 
 .post-card {
     background: white;
-    border: 2px solid #ecf0f1;
-    border-radius: 8px;
+    border: 3px solid #ecf0f1;
+    border-radius: 12px;
     padding: 1.5rem;
     transition: all 0.3s ease;
     position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .post-card:hover {
-    border-color: #3498db;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .post-card.team-recruit {
-    border-left: 4px solid #e74c3c;
+    border: 3px solid #e74c3c;
+    background: linear-gradient(135deg, #fff 0%, #fef7f7 100%);
+}
+
+.post-card.team-recruit:hover {
+    border-color: #c0392b;
+    box-shadow: 0 8px 20px rgba(231, 76, 60, 0.2);
 }
 
 .post-card.player-seeking {
-    border-left: 4px solid #3498db;
+    border: 3px solid #3498db;
+    background: linear-gradient(135deg, #fff 0%, #f7fbff 100%);
+}
+
+.post-card.player-seeking:hover {
+    border-color: #2980b9;
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.2);
 }
 
 .post-card.division-create {
-    border-left: 4px solid #27ae60;
+    border: 3px solid #27ae60;
+    background: linear-gradient(135deg, #fff 0%, #f7fff7 100%);
+}
+
+.post-card.division-create:hover {
+    border-color: #229954;
+    box-shadow: 0 8px 20px rgba(39, 174, 96, 0.2);
 }
 
 .post-type-badge {
