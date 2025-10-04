@@ -889,7 +889,9 @@ async function submitPost(postData, successMessage) {
 // 連絡フォームの送信
 async function handleContactSubmit(event) {
     event.preventDefault();
-    console.log('連絡フォーム送信開始');
+    console.log('=== 連絡フォーム送信処理開始 ===');
+    console.log('イベント:', event);
+    console.log('フォーム要素:', contactForm);
     
     const formData = new FormData(contactForm);
     const contactData = {
@@ -919,8 +921,11 @@ async function handleContactSubmit(event) {
         if (response.ok) {
             const result = await response.json();
             console.log('送信成功:', result);
+            console.log('成功メッセージを表示します');
             showMessage('メールが正常に送信されました！', 'success');
+            console.log('フォームをリセットします');
             contactForm.reset();
+            console.log('モーダルを閉じます');
             contactModal.style.display = 'none';
         } else {
             const error = await response.json();
