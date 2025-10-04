@@ -296,6 +296,11 @@ app.post('/api/contact', async (req, res) => {
       });
       const mailResult = await transporter.sendMail(mailOptions);
       console.log('投稿者へのメール送信結果:', mailResult);
+      console.log('投稿者へのメール送信成功:', {
+        accepted: mailResult.accepted,
+        rejected: mailResult.rejected,
+        messageId: mailResult.messageId
+      });
     } catch (mailError) {
       console.error('投稿者へのメール送信エラー:', mailError);
       console.error('メール送信エラー詳細:', {
@@ -336,6 +341,11 @@ app.post('/api/contact', async (req, res) => {
       });
       const confirmationResult = await transporter.sendMail(confirmationMailOptions);
       console.log('確認メール送信結果:', confirmationResult);
+      console.log('確認メール送信成功:', {
+        accepted: confirmationResult.accepted,
+        rejected: confirmationResult.rejected,
+        messageId: confirmationResult.messageId
+      });
     } catch (confirmationError) {
       console.error('確認メール送信エラー:', confirmationError);
       console.error('確認メール送信エラー詳細:', {
@@ -348,6 +358,7 @@ app.post('/api/contact', async (req, res) => {
       console.log('確認メールの送信に失敗しましたが、投稿者へのメールは送信済みです');
     }
     
+    console.log('=== 連絡フォーム送信完了 ===');
     res.json({ success: true, message: '連絡が送信されました' });
   } catch (error) {
     console.error('連絡送信エラー:', error);
