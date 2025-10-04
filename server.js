@@ -192,10 +192,28 @@ app.delete('/api/posts/:id', async (req, res) => {
 // 連絡フォーム送信
 app.post('/api/contact', async (req, res) => {
   try {
+    console.log('=== 連絡フォーム送信開始 ===');
+    console.log('環境情報:', {
+      NODE_ENV: process.env.NODE_ENV,
+      SUPABASE_URL: process.env.SUPABASE_URL ? '設定済み' : '未設定',
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY ? '設定済み' : '未設定',
+      EMAIL_USER: process.env.EMAIL_USER ? '設定済み' : '未設定',
+      EMAIL_PASS: process.env.EMAIL_PASS ? '設定済み' : '未設定'
+    });
+    
     console.log('連絡フォーム送信リクエスト受信:', req.body);
     const { postId, senderName, senderEmail, message } = req.body;
     
     console.log('連絡データ:', { postId, senderName, senderEmail, message });
+    
+    // Supabase接続テスト
+    console.log('Supabase接続テスト開始');
+    const { data: testData, error: testError } = await supabase
+      .from('posts')
+      .select('id')
+      .limit(1);
+    
+    console.log('Supabase接続テスト結果:', { testData, testError });
     
     // 投稿情報を取得
     const { data: post, error: postError } = await supabase
