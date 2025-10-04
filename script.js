@@ -425,7 +425,6 @@ function createPostCard(post) {
             <div>
                 <h3 class="post-title" onclick="showPostDetail('${post.id}')">${escapeHtml(post.title)}</h3>
                 <div class="post-meta">
-                    <span>投稿者: ${escapeHtml(getDisplayName(post) || '匿名')}</span>
                     <span class="post-date">${date}</span>
                 </div>
             </div>
@@ -476,8 +475,7 @@ function createPostDetails(post) {
                     ${post.player_count ? `<div class="post-detail-item"><span class="post-detail-label">参加希望人数:</span> ${escapeHtml(post.player_count)}</div>` : ''}
                     ${post.player_gender ? `<div class="post-detail-item"><span class="post-detail-label">性別:</span> ${getGenderText(post.player_gender)}</div>` : ''}
                     ${post.player_age ? `<div class="post-detail-item"><span class="post-detail-label">年齢:</span> ${getAgeText(post.player_age)}</div>` : ''}
-                    ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">活動可能地域:</span> ${getLocationText(post.player_location)}</div>` : ''}
-                    ${post.player_location_detail ? `<div class="post-detail-item"><span class="post-detail-label">地域詳細:</span> ${escapeHtml(post.player_location_detail)}</div>` : ''}
+                    ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">活動可能地域:</span> ${getLocationText(post.player_location)}${post.player_location_detail ? ` (${escapeHtml(post.player_location_detail)})` : ''}</div>` : ''}
                     ${post.player_level ? `<div class="post-detail-item"><span class="post-detail-label">スキルレベル:</span> ${getSkillLevelText(post.player_level)}</div>` : ''}
                     ${post.player_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレーしたい種目:</span> ${getGameTypeText(post.player_game_type)}</div>` : ''}
                     ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">参加可能頻度:</span> ${getFrequencyText(post.player_frequency)}</div>` : ''}
@@ -686,7 +684,6 @@ window.showPostDetail = async function(postId) {
             <h3>${escapeHtml(post.title)}</h3>
             <div class="meta">
                 <p><strong>投稿タイプ:</strong> ${postTypeText}</p>
-                <p><strong>投稿者:</strong> ${escapeHtml(getDisplayName(post) || '匿名')}</p>
                 <p><strong>投稿日時:</strong> ${date}</p>
             </div>
             ${createPostDetails(post)}
