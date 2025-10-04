@@ -477,6 +477,7 @@ function createPostDetails(post) {
                     ${post.player_gender ? `<div class="post-detail-item"><span class="post-detail-label">性別:</span> ${getGenderText(post.player_gender)}</div>` : ''}
                     ${post.player_age ? `<div class="post-detail-item"><span class="post-detail-label">年齢:</span> ${getAgeText(post.player_age)}</div>` : ''}
                     ${post.player_location ? `<div class="post-detail-item"><span class="post-detail-label">活動可能地域:</span> ${getLocationText(post.player_location)}</div>` : ''}
+                    ${post.player_location_detail ? `<div class="post-detail-item"><span class="post-detail-label">地域詳細:</span> ${escapeHtml(post.player_location_detail)}</div>` : ''}
                     ${post.player_level ? `<div class="post-detail-item"><span class="post-detail-label">スキルレベル:</span> ${getSkillLevelText(post.player_level)}</div>` : ''}
                     ${post.player_game_type ? `<div class="post-detail-item"><span class="post-detail-label">プレーしたい種目:</span> ${getGameTypeText(post.player_game_type)}</div>` : ''}
                     ${post.player_frequency ? `<div class="post-detail-item"><span class="post-detail-label">参加可能頻度:</span> ${getFrequencyText(post.player_frequency)}</div>` : ''}
@@ -805,6 +806,7 @@ async function handlePlayerSeekingSubmit(event) {
         player_gender: playerGender && playerGender !== '' ? playerGender : null,
         player_age: playerAge && playerAge !== '' ? playerAge : null,
         player_location: formData.get('playerLocation'),
+        player_location_detail: formData.get('playerLocationDetail'),
         player_experience: formData.get('playerExperience'),
         jpa_history: jpaHistory,
         jpa_history_text: jpaHistoryText,
