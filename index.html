@@ -234,12 +234,10 @@
                     </div>
 
                     <!-- 公開情報 -->
-                    <div class="form-section-header">
+                    <div class="form-section">
                         <h3>公開情報</h3>
-                        <p>こちらは他のユーザーに公開されます</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="playerContent">タイトル *</label>
+                        <div class="form-group">
+                            <label for="playerContent">タイトル *</label>
                         <textarea id="playerContent" name="playerContent" rows="4" required placeholder="チーム加入希望の詳細を記入してください"></textarea>
                     </div>
                     <div class="form-group">
@@ -370,10 +368,11 @@
                         <textarea id="playerSelfIntro" name="playerSelfIntro" rows="3" maxlength="100" placeholder="100文字以内で自己紹介を入力してください"></textarea>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="playerPin">削除用PIN（4桁の半角数字） *</label>
-                        <input type="password" id="playerPin" name="playerPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
-                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
+                        <div class="form-group">
+                            <label for="playerPin">削除用PIN（4桁の半角数字） *</label>
+                            <input type="password" id="playerPin" name="playerPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
+                            <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
+                        </div>
                     </div>
                     <input type="hidden" name="postType" value="player-seeking">
                     <button type="submit" class="btn btn-secondary">投稿する</button>
@@ -402,12 +401,10 @@
                     </div>
 
                     <!-- 公開情報 -->
-                    <div class="form-section-header">
+                    <div class="form-section">
                         <h3>公開情報</h3>
-                        <p>こちらは他のユーザーに公開されます</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="divisionContent">タイトル *</label>
+                        <div class="form-group">
+                            <label for="divisionContent">タイトル *</label>
                         <textarea id="divisionContent" name="divisionContent" rows="4" required placeholder="ディビジョン創設の詳細を記入してください"></textarea>
                     </div>
                     <div class="form-group">
@@ -471,10 +468,11 @@
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="divisionPin">削除用PIN（4桁の半角数字） *</label>
-                        <input type="password" id="divisionPin" name="divisionPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
-                        <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
+                        <div class="form-group">
+                            <label for="divisionPin">削除用PIN（4桁の半角数字） *</label>
+                            <input type="password" id="divisionPin" name="divisionPin" pattern="[0-9]{4}" maxlength="4" required placeholder="例: 1234">
+                            <small class="form-help">投稿削除時に必要になります。忘れずにメモしておいてください。</small>
+                        </div>
                     </div>
                     <input type="hidden" name="postType" value="division-create">
                     <button type="submit" class="btn btn-tertiary">投稿する</button>
