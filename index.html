@@ -72,8 +72,10 @@
                 <h2>🏆 チームメイト募集中！</h2>
                 <p class="form-note">※印は必須項目です</p>
                 <form id="teamRecruitFormElement" class="post-form">
-                    <div class="form-section">
-                        <h3>非公開情報（連絡用）</h3>
+                    <div class="form-section-header">
+                        <h3>非公開情報</h3>
+                        <p>こちらは非公開で管理されます</p>
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="teamCaptainName">お名前 *</label>
@@ -91,7 +93,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="teamNickname">チーム名・ニックネーム</label>
-                                <input type="text" id="teamNickname" name="teamNickname" placeholder="任意">
+                                <input type="text" id="teamNickname" name="nickname" placeholder="任意">
                             </div>
                             <div class="form-group">
                                 <label for="neededPlayers">チームメイト募集人数 *</label>
@@ -221,15 +223,15 @@
                     <div class="form-section-header">
                         <h3>非公開情報</h3>
                         <p>こちらは非公開で管理されます</p>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="playerName">お名前（非公開） *</label>
-                            <input type="text" id="playerName" name="authorName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="playerEmail">メールアドレス（非公開） *</label>
-                            <input type="email" id="playerEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="playerName">お名前（非公開） *</label>
+                                <input type="text" id="playerName" name="authorName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="playerEmail">メールアドレス（非公開） *</label>
+                                <input type="email" id="playerEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
+                            </div>
                         </div>
                     </div>
 
@@ -240,7 +242,7 @@
                     </div>
                     <div class="form-group">
                         <label for="playerNickname">ニックネーム *</label>
-                        <input type="text" id="playerNickname" name="playerNickname" required placeholder="例：ビリヤード太郎">
+                        <input type="text" id="playerNickname" name="nickname" required placeholder="例：ビリヤード太郎">
                     </div>
                     <div class="form-group">
                         <label for="playerCount">参加希望人数 *</label>
@@ -386,15 +388,15 @@
                     <div class="form-section-header">
                         <h3>非公開情報</h3>
                         <p>こちらは非公開で管理されます</p>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="divisionName">お名前（非公開） *</label>
-                            <input type="text" id="divisionName" name="authorName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="divisionEmail">メールアドレス（非公開） *</label>
-                            <input type="email" id="divisionEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="divisionName">お名前（非公開） *</label>
+                                <input type="text" id="divisionName" name="authorName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="divisionEmail">メールアドレス（非公開） *</label>
+                                <input type="email" id="divisionEmail" name="authorEmail" required placeholder="連絡があったときに受信するアドレス">
+                            </div>
                         </div>
                     </div>
 
@@ -402,6 +404,10 @@
                     <div class="form-section-header">
                         <h3>公開情報</h3>
                         <p>こちらは他のユーザーに公開されます</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionNickname">ニックネーム（任意）</label>
+                        <input type="text" id="divisionNickname" name="nickname" placeholder="例：ディビジョンリーダー">
                     </div>
                     <div class="form-group">
                         <label for="divisionLocation">活動地域 *</label>
