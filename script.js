@@ -423,7 +423,7 @@ function createPostCard(post) {
         <div class="post-header">
             <h3 class="post-title" onclick="showPostDetail('${post.id}')">${escapeHtml(post.title)}</h3>
             <div class="post-meta">
-                <span class="post-date">${date}</span>
+                <span class="post-date">投稿日：${date}</span>
             </div>
         </div>
         <div class="post-content">
