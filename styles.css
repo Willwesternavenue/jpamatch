@@ -470,6 +470,7 @@ select {
     color: #555;
     line-height: 1.6;
     margin-bottom: 1rem;
+    font-size: 2rem;
 }
 
 .post-details {
