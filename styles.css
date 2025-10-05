@@ -441,18 +441,17 @@ select {
 
 .post-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column;
     margin-bottom: 1rem;
-    padding-right: 100px;
 }
 
 .post-title {
-    font-size: 1.3rem;
-    font-weight: 600;
+    font-size: 1.8rem;
+    font-weight: 700;
     color: #2c3e50;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
     cursor: pointer;
+    line-height: 1.3;
 }
 
 .post-title:hover {
@@ -666,6 +665,10 @@ select {
         padding-right: 0;
         flex-direction: column;
         align-items: flex-start;
+    }
+    
+    .post-title {
+        font-size: 1.5rem;
     }
     
     .post-type-badge {
