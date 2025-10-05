@@ -920,7 +920,7 @@ async function handleContactSubmit(event) {
             const result = await response.json();
             console.log('送信成功:', result);
             console.log('成功メッセージを表示します');
-            showMessage('✅ メールが正常に送信されました！投稿者に連絡メールが送信され、確認メールがあなたに送信されました。', 'success');
+            showMessage('✅ メールが正常に送信されました！', 'success');
             console.log('フォームをリセットします');
             contactForm.reset();
             console.log('モーダルを閉じます');
