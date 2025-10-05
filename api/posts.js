@@ -58,7 +58,7 @@ export default async function handler(req, res) {
         delete_pin,
         // All possible fields from all forms
         nickname, needed_players, team_location, team_location_detail, team_jpa_history, team_skill_level, team_game_type, team_frequency, team_availability, team_self_intro,
-        player_count, player_gender, player_age, player_location, player_experience, jpa_history, jpa_history_text, player_level, player_game_type, player_frequency, player_availability, player_self_intro,
+        player_count, player_gender, player_age, player_location, player_location_detail, player_experience, jpa_history, jpa_history_text, player_level, player_game_type, player_frequency, player_availability, player_self_intro,
         division_location, division_shop, division_teams, division_game_type, division_day
       } = req.body;
       
@@ -78,13 +78,23 @@ export default async function handler(req, res) {
       const filteredTeamFrequency = team_frequency && team_frequency !== '' ? team_frequency : null;
       const filteredDivisionGameType = division_game_type && division_game_type !== '' ? division_game_type : null;
 
+      const sanitizeDetailField = (value) => {
+        if (value === undefined || value === null) return null;
+        if (typeof value !== 'string') return value;
+        const trimmed = value.trim();
+        return trimmed === '' ? null : trimmed;
+      };
+
+      const sanitizedTeamLocationDetail = sanitizeDetailField(team_location_detail);
+      const sanitizedPlayerLocationDetail = sanitizeDetailField(player_location_detail);
+
       const { data: postData, error: postError } = await supabase
         .from('posts')
         .insert([
           {
             title, content, author_email, author_name, post_type, delete_pin,
-            nickname, needed_players, team_location, team_location_detail, team_jpa_history: filteredTeamJpaHistory, team_skill_level: filteredTeamSkillLevel, team_game_type: filteredTeamGameType, team_frequency: filteredTeamFrequency, team_availability, team_self_intro,
-            player_count, player_gender: filteredPlayerGender, player_age: filteredPlayerAge, player_location, player_experience, jpa_history, jpa_history_text, player_level: filteredPlayerLevel, player_game_type: filteredPlayerGameType, player_frequency: filteredPlayerFrequency, player_availability, player_self_intro,
+            nickname, needed_players, team_location, team_location_detail: sanitizedTeamLocationDetail, team_jpa_history: filteredTeamJpaHistory, team_skill_level: filteredTeamSkillLevel, team_game_type: filteredTeamGameType, team_frequency: filteredTeamFrequency, team_availability, team_self_intro,
+            player_count, player_gender: filteredPlayerGender, player_age: filteredPlayerAge, player_location, player_location_detail: sanitizedPlayerLocationDetail, player_experience, jpa_history, jpa_history_text, player_level: filteredPlayerLevel, player_game_type: filteredPlayerGameType, player_frequency: filteredPlayerFrequency, player_availability, player_self_intro,
             division_location, division_shop, division_teams, division_game_type: filteredDivisionGameType, division_day
           }
         ])
